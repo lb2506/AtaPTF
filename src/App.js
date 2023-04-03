@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import "konva/lib/filters/Grayscale";
 import "./App.css";
@@ -33,8 +33,8 @@ const imageURLs = [
 ];
 
 const generateDeterministicImageIndexGrid = (size) => {
-  const rowCoefficient = 3;
-  const colCoefficient = 6;
+  const rowCoefficient = 2;
+  const colCoefficient = 3;
   const modCoefficient = imageURLs.length;
 
   const grid = Array(size)
@@ -87,7 +87,7 @@ const ImageGrid = React.memo(({
   image,
   onMouseEnter,
   onMouseLeave,
-  zIndex, // Ajoutez ceci
+  zIndex,
 }) => {
   return (
     <KonvaImage
@@ -98,11 +98,28 @@ const ImageGrid = React.memo(({
       image={image}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      zIndex={zIndex} // Ajoutez ceci
+      zIndex={zIndex}
     />
   );
 });
 
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
+};
 
 const App = () => {
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
@@ -118,11 +135,13 @@ const App = () => {
     });
   }, []);
 
-  const startX = Math.floor((-stagePos.x - window.innerWidth) / (WIDTH + MARGIN)) * (WIDTH + MARGIN);
-  const endX = Math.floor((-stagePos.x + window.innerWidth * 2) / (WIDTH + MARGIN)) * (WIDTH + MARGIN);
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
 
-  const startY = Math.floor((-stagePos.y - window.innerHeight) / (HEIGHT + MARGIN)) * (HEIGHT + MARGIN);
-  const endY = Math.floor((-stagePos.y + window.innerHeight * 2) / (HEIGHT + MARGIN)) * (HEIGHT + MARGIN);
+  const startX = Math.floor((-stagePos.x - windowWidth) / (WIDTH + MARGIN)) * (WIDTH + MARGIN);
+  const endX = Math.floor((-stagePos.x + windowWidth * 2) / (WIDTH + MARGIN)) * (WIDTH + MARGIN);
+
+  const startY = Math.floor((-stagePos.y - windowHeight) / (HEIGHT + MARGIN)) * (HEIGHT + MARGIN);
+  const endY = Math.floor((-stagePos.y + windowHeight * 2) / (HEIGHT + MARGIN)) * (HEIGHT + MARGIN);
 
   const handleMouseEnter = useCallback((x, y) => {
     setHoveredImageIndices((prevHoveredIndices) => {
@@ -158,9 +177,7 @@ const App = () => {
     return isEnlarged ? 1 : 0;
   };
 
-
-
-  const renderGridComponents = () => {
+  const renderGridComponents = useMemo(() => {
     const gridComponents = [];
     for (let x = startX; x < endX; x += WIDTH + MARGIN) {
       for (let y = startY; y < endY; y += HEIGHT + MARGIN) {
@@ -190,7 +207,7 @@ const App = () => {
     gridComponents.sort((a, b) => a.zIndex - b.zIndex);
 
     // Rendre les composants d'image triés
-    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, zIndex }) => ( // Ajoutez "zIndex" ici
+    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, zIndex }) => (
       <ImageGrid
         key={`${x}-${y}`}
         x={x}
@@ -200,25 +217,24 @@ const App = () => {
         image={image}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        zIndex={zIndex} // Ajoutez ceci
+        zIndex={zIndex}
       />
     ));
-  };
-
+  }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, randomImageIndexGrid]);
 
   return (
     <Stage
       x={stagePos.x}
       y={stagePos.y}
-      width={window.innerWidth}
-      height={window.innerHeight}
+      width={windowWidth}
+      height={windowHeight}
       draggable
       onWheel={handleWheel}
       onDragEnd={(e) => {
         setStagePos(e.currentTarget.position());
       }}
     >
-      <Layer>{renderGridComponents()}</Layer>
+      <Layer>{renderGridComponents}</Layer>
     </Stage>
   );
 };
