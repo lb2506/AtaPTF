@@ -10,8 +10,8 @@ const LARGE_HEIGHT = 530;
 const MARGIN = 30;
 const GRID_SIZE = 100;
 
-const bigProjects = [6, 11]; // index of projects
-const bigProjetsFerequency = 3; // 1 is very frequently
+const bigProjects = [0, 6, 11]; // index of projects (don't change values, change position of images to respect values)
+const bigProjetsFerequency = 3; // 1 is very frequently (3 is optimal)
 
 const imageURLs = [
   "https://picsum.photos/id/1/250/250", // 0
@@ -33,8 +33,8 @@ const imageURLs = [
 ];
 
 const generateDeterministicImageIndexGrid = (size) => {
-  const rowCoefficient = 2;
-  const colCoefficient = 3;
+  const rowCoefficient = 6;
+  const colCoefficient = 7;
   const modCoefficient = imageURLs.length;
 
   const grid = Array(size)
@@ -122,7 +122,7 @@ const useWindowSize = () => {
 };
 
 const App = () => {
-  const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
+  const [stagePos, setStagePos] = useState({ x: -50, y: 0 }); // Placement initial de la grille
   const [images, setImages] = useState([]);
   const [imagesGrayscale, setImagesGrayscale] = useState([]);
   const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
