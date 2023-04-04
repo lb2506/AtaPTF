@@ -87,7 +87,7 @@ const ImageGrid = React.memo(({
   image,
   onMouseEnter,
   onMouseLeave,
-  zIndex,
+  onClick,
 }) => {
   return (
     <KonvaImage
@@ -98,7 +98,7 @@ const ImageGrid = React.memo(({
       image={image}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      zIndex={zIndex}
+      onClick={onClick}
     />
   );
 });
@@ -172,10 +172,10 @@ const App = () => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
   };
 
-  const getZIndex = (x, y, imageIndex) => {
-    const isEnlarged = bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
-    return isEnlarged ? 1 : 0;
-  };
+
+  const handleClick = useCallback((x, y) => {
+    console.log("click", x, y);
+  }, []);
 
   const renderGridComponents = useMemo(() => {
     const gridComponents = [];
@@ -198,16 +198,19 @@ const App = () => {
           image: isHovered ? images[imageIndex] : imagesGrayscale[imageIndex],
           onMouseEnter: () => handleMouseEnter(x, y),
           onMouseLeave: () => handleMouseLeave(x, y),
-          zIndex: getZIndex(x, y, imageIndex),
         });
       }
     }
 
-    // Trier les composants d'image par zIndex
-    gridComponents.sort((a, b) => a.zIndex - b.zIndex);
+    // Trier les composants d'image par taille
+    gridComponents.sort((a, b) => {
+      if (a.width > b.width) return 1;
+      if (a.width < b.width) return -1;
+      return 0;
+    });
 
     // Rendre les composants d'image triés
-    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, zIndex }) => (
+    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => (
       <ImageGrid
         key={`${x}-${y}`}
         x={x}
@@ -217,11 +220,10 @@ const App = () => {
         image={image}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        zIndex={zIndex}
+        onClick={() => handleClick(x, y)}
       />
     ));
-  }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, randomImageIndexGrid]);
-
+  }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid]);
   return (
     <Stage
       x={stagePos.x}
