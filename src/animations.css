@@ -1,0 +1,19 @@
+@keyframes move-to-center {
+    from {
+      transform: translate(var(--init-x), var(--init-y));
+    }
+  
+    to {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes move-to-origin {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(calc(var(--init-x)), calc(var(--init-y)));
+    }
+  }
+  

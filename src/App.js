@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import "konva/lib/filters/Grayscale";
 import "./App.css";
+import "./animations.css";
+
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -14,22 +16,22 @@ const bigProjects = [0, 6, 11];
 const bigProjetsFerequency = 3;
 
 const imageURLs = [
-  "https://picsum.photos/id/1/250/250",
-  "https://picsum.photos/id/15/250/250",
-  "https://picsum.photos/id/26/250/250",
-  "https://picsum.photos/id/33/250/250",
-  "https://picsum.photos/id/54/250/250",
-  "https://picsum.photos/id/63/250/250",
-  "https://picsum.photos/id/74/250/250",
-  "https://picsum.photos/id/29/250/250",
-  "https://picsum.photos/id/7/250/250",
-  "https://picsum.photos/id/44/250/250",
-  "https://picsum.photos/id/20/250/250",
-  "https://picsum.photos/id/39/250/250",
-  "https://picsum.photos/id/21/250/250",
-  "https://picsum.photos/id/28/250/250",
-  "https://picsum.photos/id/9/250/250",
-  "https://picsum.photos/id/64/250/250",
+  "/assets/0.jpg", // 0
+  "/assets/1.jpg", // 1
+  "/assets/2.jpg", // 2
+  "/assets/3.jpg", // 3
+  "/assets/4.jpg", // 4
+  "/assets/5.jpg", // 5
+  "/assets/6.jpg", // 6
+  "/assets/7.jpg", // 7
+  "/assets/8.jpg", // 8
+  "/assets/9.jpg", // 9
+  "/assets/10.jpg", // 10
+  "/assets/11.jpg", // 11
+  "/assets/12.jpg", // 12
+  "/assets/13.jpg", // 13
+  "/assets/14.jpg", // 14
+  "/assets/15.jpg", // 15
 ];
 
 const generateDeterministicImageIndexGrid = (size) => {
@@ -126,7 +128,7 @@ const App = () => {
   const [imagesGrayscale, setImagesGrayscale] = useState([]);
   const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
-  const [enlargedImage, setEnlargedImage] = useState(null);
+  const [enlargedImgData, setEnlargedImgData] = useState(null);
 
   useEffect(() => {
     loadImages(imageURLs).then((loadedImages) => {
@@ -158,34 +160,44 @@ const App = () => {
   }, []);
 
   const handleWheel = useCallback(
-  (e) => {
-    e.evt.preventDefault();
+    (e) => {
+      e.evt.preventDefault();
 
-    const updatePosition = () => {
-      const newStagePos = {
-        x: stagePos.x - e.evt.deltaX,
-        y: stagePos.y - e.evt.deltaY,
+      const updatePosition = () => {
+        const newStagePos = {
+          x: stagePos.x - e.evt.deltaX,
+          y: stagePos.y - e.evt.deltaY,
+        };
+
+        setStagePos(newStagePos);
       };
 
-      setStagePos(newStagePos);
-    };
-
-    requestAnimationFrame(updatePosition);
-  },
-  [stagePos]
-);
+      requestAnimationFrame(updatePosition);
+    },
+    [stagePos]
+  );
 
   const shouldEnlargeFirstImage = (x, y, imageIndex) => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
   };
 
   const handleClick = useCallback((x, y) => {
-    console.log("click", x, y);
     const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
     const indexY = Math.abs(y / (HEIGHT + MARGIN)) % GRID_SIZE;
     const imageIndex = randomImageIndexGrid[indexX][indexY];
-    setEnlargedImage(images[imageIndex]);
-  }, [randomImageIndexGrid, images]);
+    const isEnlarged = shouldEnlargeFirstImage(x, y, imageIndex);
+
+    const imgWidth = isEnlarged ? LARGE_WIDTH : WIDTH;
+    const imgHeight = isEnlarged ? LARGE_HEIGHT : HEIGHT;
+
+    setEnlargedImgData({
+      src: images[imageIndex].src,
+      x: x + stagePos.x,
+      y: y + stagePos.y,
+      width: imgWidth,
+      height: imgHeight,
+    });
+  }, [randomImageIndexGrid, images, stagePos]);
 
   const renderGridComponents = useMemo(() => {
     const gridComponents = [];
@@ -234,34 +246,43 @@ const App = () => {
   }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid]);
 
   const EnlargedImageComponent = useMemo(() => {
-    if (!enlargedImage) return null;
+    if (!enlargedImgData) return null;
+
+    const { src, x, y, width, height } = enlargedImgData;
+
+    const centerX = windowWidth / 2 - width / 2;
+    const centerY = windowHeight / 2 - height / 2;
+
+    const initX = x - centerX;
+    const initY = y - centerY;
 
     return (
       <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 1)",
-          zIndex: 1000,
-        }}
-        onClick={() => setEnlargedImage(null)}
-      >
+      style={{
+        position: "fixed",
+        top: centerY,
+        left: centerX,
+        width: width,
+        height: height,
+        zIndex: 1000,
+        animation: "move-to-center 1s forwards",
+        animationTimingFunction: "ease-out",
+        '--init-x': `${initX}px`,
+        '--init-y': `${initY}px`,
+      }}>
         <img
-          src={enlargedImage.src}
+          src={src}
           alt="Enlarged"
-          width={525}
-          height={525}
-          style={{ objectFit: "cover" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            pointerEvents: "none",
+          }}
         />
       </div>
     );
-  }, [enlargedImage]);
+  }, [enlargedImgData, windowWidth, windowHeight]);
 
   return (
     <>
