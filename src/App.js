@@ -10,26 +10,26 @@ const LARGE_HEIGHT = 530;
 const MARGIN = 30;
 const GRID_SIZE = 100;
 
-const bigProjects = [0, 6, 11]; // index of projects (don't change values, change position of images to respect values)
-const bigProjetsFerequency = 3; // 1 is very frequently (3 is optimal)
+const bigProjects = [0, 6, 11];
+const bigProjetsFerequency = 3;
 
 const imageURLs = [
-  "https://picsum.photos/id/1/250/250", // 0
-  "https://picsum.photos/id/15/250/250", // 1
-  "https://picsum.photos/id/26/250/250", // 2
-  "https://picsum.photos/id/33/250/250", // 3
-  "https://picsum.photos/id/54/250/250", // 4
-  "https://picsum.photos/id/63/250/250", // 5
-  "https://picsum.photos/id/74/250/250", // 6
-  "https://picsum.photos/id/29/250/250", // 7
-  "https://picsum.photos/id/7/250/250", // 8
-  "https://picsum.photos/id/44/250/250", // 9
-  "https://picsum.photos/id/20/250/250", // 10
-  "https://picsum.photos/id/39/250/250", // 11
-  "https://picsum.photos/id/21/250/250", // 12
-  "https://picsum.photos/id/28/250/250", // 13
-  "https://picsum.photos/id/9/250/250", // 14
-  "https://picsum.photos/id/64/250/250", // 15
+  "https://picsum.photos/id/1/250/250",
+  "https://picsum.photos/id/15/250/250",
+  "https://picsum.photos/id/26/250/250",
+  "https://picsum.photos/id/33/250/250",
+  "https://picsum.photos/id/54/250/250",
+  "https://picsum.photos/id/63/250/250",
+  "https://picsum.photos/id/74/250/250",
+  "https://picsum.photos/id/29/250/250",
+  "https://picsum.photos/id/7/250/250",
+  "https://picsum.photos/id/44/250/250",
+  "https://picsum.photos/id/20/250/250",
+  "https://picsum.photos/id/39/250/250",
+  "https://picsum.photos/id/21/250/250",
+  "https://picsum.photos/id/28/250/250",
+  "https://picsum.photos/id/9/250/250",
+  "https://picsum.photos/id/64/250/250",
 ];
 
 const generateDeterministicImageIndexGrid = (size) => {
@@ -46,7 +46,6 @@ const generateDeterministicImageIndexGrid = (size) => {
     );
   return grid;
 };
-
 
 const loadImages = (urls) => {
   return Promise.all(urls.map((url) => {
@@ -122,11 +121,12 @@ const useWindowSize = () => {
 };
 
 const App = () => {
-  const [stagePos, setStagePos] = useState({ x: -50, y: 0 }); // Placement initial de la grille
+  const [stagePos, setStagePos] = useState({ x: -50, y: 0 });
   const [images, setImages] = useState([]);
   const [imagesGrayscale, setImagesGrayscale] = useState([]);
   const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
+  const [enlargedImage, setEnlargedImage] = useState(null);
 
   useEffect(() => {
     loadImages(imageURLs).then((loadedImages) => {
@@ -172,10 +172,13 @@ const App = () => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
   };
 
-
   const handleClick = useCallback((x, y) => {
     console.log("click", x, y);
-  }, []);
+    const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
+    const indexY = Math.abs(y / (HEIGHT + MARGIN)) % GRID_SIZE;
+    const imageIndex = randomImageIndexGrid[indexX][indexY];
+    setEnlargedImage(images[imageIndex]);
+  }, [randomImageIndexGrid, images]);
 
   const renderGridComponents = useMemo(() => {
     const gridComponents = [];
@@ -202,14 +205,12 @@ const App = () => {
       }
     }
 
-    // Trier les composants d'image par taille
     gridComponents.sort((a, b) => {
       if (a.width > b.width) return 1;
       if (a.width < b.width) return -1;
       return 0;
     });
 
-    // Rendre les composants d'image triés
     return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => (
       <ImageGrid
         key={`${x}-${y}`}
@@ -224,21 +225,57 @@ const App = () => {
       />
     ));
   }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid]);
+
+  const EnlargedImageComponent = useMemo(() => {
+    if (!enlargedImage) return null;
+
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0, 0, 0, 1)",
+          zIndex: 1000,
+        }}
+        onClick={() => setEnlargedImage(null)}
+      >
+        <img
+          src={enlargedImage.src}
+          alt="Enlarged"
+          width={525}
+          height={525}
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+    );
+  }, [enlargedImage]);
+
   return (
-    <Stage
-      x={stagePos.x}
-      y={stagePos.y}
-      width={windowWidth}
-      height={windowHeight}
-      draggable
-      onWheel={handleWheel}
-      onDragEnd={(e) => {
-        setStagePos(e.currentTarget.position());
-      }}
-    >
-      <Layer>{renderGridComponents}</Layer>
-    </Stage>
+    <>
+      <Stage
+        x={stagePos.x}
+        y={stagePos.y}
+        width={windowWidth}
+        height={windowHeight}
+        draggable
+        onWheel={handleWheel}
+        onDragEnd={(e) => {
+          setStagePos(e.currentTarget.position());
+        }}
+      >
+        <Layer>{renderGridComponents}</Layer>
+      </Stage>
+      {EnlargedImageComponent}
+    </>
   );
 };
 
 export default App;
+
+
