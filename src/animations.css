@@ -7,13 +7,14 @@
       transform: translate(0, 0);
     }
   }
-
+  
   @keyframes move-to-origin {
-    0% {
+    from {
       transform: translate(0, 0);
     }
-    100% {
-      transform: translate(calc(var(--init-x)), calc(var(--init-y)));
+  
+    to {
+      transform: translate(var(--init-x), var(--init-y));
     }
   }
   

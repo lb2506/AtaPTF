@@ -129,6 +129,7 @@ const App = () => {
   const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
   const [enlargedImgData, setEnlargedImgData] = useState(null);
+  const [isReturning, setIsReturning] = useState(false);
 
   useEffect(() => {
     loadImages(imageURLs).then((loadedImages) => {
@@ -247,29 +248,39 @@ const App = () => {
 
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
-
+  
     const { src, x, y, width, height } = enlargedImgData;
-
+  
     const centerX = windowWidth / 2 - width / 2;
     const centerY = windowHeight / 2 - height / 2;
-
+  
     const initX = x - centerX;
     const initY = y - centerY;
-
+  
+    const handleClickOnEnlargedImage = () => {
+      setIsReturning(true);
+      setTimeout(() => {
+        setEnlargedImgData(null);
+        setIsReturning(false);
+      }, 1000);
+    };
+  
     return (
       <div
-      style={{
-        position: "fixed",
-        top: centerY,
-        left: centerX,
-        width: width,
-        height: height,
-        zIndex: 1000,
-        animation: "move-to-center 1s forwards",
-        animationTimingFunction: "ease-out",
-        '--init-x': `${initX}px`,
-        '--init-y': `${initY}px`,
-      }}>
+        onClick={handleClickOnEnlargedImage}
+        style={{
+          position: "fixed",
+          top: centerY,
+          left: centerX,
+          width: width,
+          height: height,
+          zIndex: 1000,
+          animation: isReturning ? "move-to-origin 1s forwards" : "move-to-center 1s forwards",
+          animationTimingFunction: "ease-out",
+          '--init-x': `${initX}px`,
+          '--init-y': `${initY}px`,
+        }}
+      >
         <img
           src={src}
           alt="Enlarged"
@@ -282,7 +293,7 @@ const App = () => {
         />
       </div>
     );
-  }, [enlargedImgData, windowWidth, windowHeight]);
+  }, [enlargedImgData, windowWidth, windowHeight, isReturning]);
 
   return (
     <>
