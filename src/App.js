@@ -130,6 +130,8 @@ const App = () => {
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
   const [enlargedImgData, setEnlargedImgData] = useState(null);
   const [isReturning, setIsReturning] = useState(false);
+  const [whiteCoverData, setWhiteCoverData] = useState(null);
+
 
   useEffect(() => {
     loadImages(imageURLs).then((loadedImages) => {
@@ -137,6 +139,14 @@ const App = () => {
       setImagesGrayscale(loadedImages.map(img => img.grayscale));
     });
   }, []);
+
+  useEffect(() => {
+    if (isReturning) {
+      setTimeout(() => {
+        setWhiteCoverData(null);
+      }, 1000);
+    }
+  }, [isReturning]);
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -198,6 +208,14 @@ const App = () => {
       width: imgWidth,
       height: imgHeight,
     });
+
+    setWhiteCoverData({
+      x: x + stagePos.x,
+      y: y + stagePos.y,
+      width: isEnlarged ? LARGE_WIDTH : WIDTH,
+      height: isEnlarged ? LARGE_HEIGHT : HEIGHT,
+    });
+
   }, [randomImageIndexGrid, images, stagePos]);
 
   const renderGridComponents = useMemo(() => {
@@ -276,7 +294,7 @@ const App = () => {
           height: height,
           zIndex: 1000,
           animation: isReturning ? "move-to-origin 1s forwards" : "move-to-center 1s forwards",
-          animationTimingFunction: "ease-out",
+          animationTimingFunction: "ease-in-out",
           '--init-x': `${initX}px`,
           '--init-y': `${initY}px`,
         }}
@@ -295,6 +313,27 @@ const App = () => {
     );
   }, [enlargedImgData, windowWidth, windowHeight, isReturning]);
 
+  const WhiteCover = useMemo(() => {
+    if (!whiteCoverData) return null;
+  
+    const { x, y, width, height } = whiteCoverData;
+  
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: y,
+          left: x,
+          width: width,
+          height: height,
+          backgroundColor: "white",
+          zIndex: 999,
+          pointerEvents: "none",
+        }}
+      />
+    );
+  }, [whiteCoverData]);
+
   return (
     <>
       <Stage
@@ -311,6 +350,7 @@ const App = () => {
         <Layer>{renderGridComponents}</Layer>
       </Stage>
       {EnlargedImageComponent}
+      {WhiteCover}
     </>
   );
 };
