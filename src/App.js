@@ -157,16 +157,23 @@ const App = () => {
     });
   }, []);
 
-  const handleWheel = useCallback((e) => {
+  const handleWheel = useCallback(
+  (e) => {
     e.evt.preventDefault();
 
-    const newStagePos = {
-      x: stagePos.x - e.evt.deltaX,
-      y: stagePos.y - e.evt.deltaY,
+    const updatePosition = () => {
+      const newStagePos = {
+        x: stagePos.x - e.evt.deltaX,
+        y: stagePos.y - e.evt.deltaY,
+      };
+
+      setStagePos(newStagePos);
     };
 
-    setStagePos(newStagePos);
-  }, [stagePos]);
+    requestAnimationFrame(updatePosition);
+  },
+  [stagePos]
+);
 
   const shouldEnlargeFirstImage = (x, y, imageIndex) => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
@@ -277,5 +284,3 @@ const App = () => {
 };
 
 export default App;
-
-
