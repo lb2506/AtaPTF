@@ -130,7 +130,22 @@ const App = () => {
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
   const [enlargedImgData, setEnlargedImgData] = useState(null);
   const [isReturning, setIsReturning] = useState(false);
-  const [whiteCoverData, setWhiteCoverData] = useState(null);
+  const [showBlackBackground, setShowBlackBackground] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [hiddenImage, setHiddenImage] = useState(null);
+
+
+  useEffect(() => {
+    if (isFadingOut) {
+      const timer = setTimeout(() => {
+        setShowBlackBackground(false);
+        setIsFadingOut(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isFadingOut]);
+
 
 
   useEffect(() => {
@@ -140,13 +155,22 @@ const App = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (isReturning) {
-      setTimeout(() => {
-        setWhiteCoverData(null);
-      }, 1000);
-    }
-  }, [isReturning]);
+  const isUnderLargeImage = useCallback((x, y, gridSize, bigProjetsFerequency) => {
+    const checkPosition = (x, y) => {
+      const indexX = Math.abs(x / (WIDTH + MARGIN)) % gridSize;
+      const indexY = Math.abs(y / (HEIGHT + MARGIN)) % gridSize;
+  
+      const imageIndex = randomImageIndexGrid[indexX][indexY];
+      return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
+    };
+  
+    const left = checkPosition(x - (WIDTH + MARGIN), y);
+    const top = checkPosition(x, y - (HEIGHT + MARGIN));
+    const topLeft = checkPosition(x - (WIDTH + MARGIN), y - (HEIGHT + MARGIN));
+  
+    return left || top || topLeft;
+  }, [randomImageIndexGrid]);
+  
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -188,6 +212,19 @@ const App = () => {
     [stagePos]
   );
 
+  const handleClickOnEnlargedImage = () => {
+    setIsReturning(true);
+    setTimeout(() => {
+      handleMouseLeave(hiddenImage.x, hiddenImage.y); // Ajouté cette ligne
+      setHiddenImage(null);
+      setEnlargedImgData(null);
+      setIsReturning(false);
+    }, 1000);
+    setIsFadingOut(true);
+  };
+  
+
+
   const shouldEnlargeFirstImage = (x, y, imageIndex) => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
   };
@@ -209,37 +246,36 @@ const App = () => {
       height: imgHeight,
     });
 
-    setWhiteCoverData({
-      x: x + stagePos.x,
-      y: y + stagePos.y,
-      width: isEnlarged ? LARGE_WIDTH : WIDTH,
-      height: isEnlarged ? LARGE_HEIGHT : HEIGHT,
-    });
-
+    setHiddenImage({ x, y, imageIndex });
+    setShowBlackBackground(true);
   }, [randomImageIndexGrid, images, stagePos]);
+
+
 
   const renderGridComponents = useMemo(() => {
     const gridComponents = [];
     for (let x = startX; x < endX; x += WIDTH + MARGIN) {
       for (let y = startY; y < endY; y += HEIGHT + MARGIN) {
-        const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
-        const indexY = Math.abs(y / (HEIGHT + MARGIN)) % GRID_SIZE;
+        if (!isUnderLargeImage(x, y, GRID_SIZE, bigProjetsFerequency)) {
+          const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
+          const indexY = Math.abs(y / (HEIGHT + MARGIN)) % GRID_SIZE;
 
-        const imageIndex = randomImageIndexGrid[indexX][indexY];
+          const imageIndex = randomImageIndexGrid[indexX][indexY];
 
-        const isHovered = hoveredImageIndices[`${x}-${y}`] === true;
+          const isHovered = hoveredImageIndices[`${x}-${y}`] === true;
 
-        const isEnlarged = shouldEnlargeFirstImage(x, y, imageIndex);
+          const isEnlarged = shouldEnlargeFirstImage(x, y, imageIndex);
 
-        gridComponents.push({
-          x,
-          y,
-          width: isEnlarged ? LARGE_WIDTH : WIDTH,
-          height: isEnlarged ? LARGE_HEIGHT : HEIGHT,
-          image: isHovered ? images[imageIndex] : imagesGrayscale[imageIndex],
-          onMouseEnter: () => handleMouseEnter(x, y),
-          onMouseLeave: () => handleMouseLeave(x, y),
-        });
+          gridComponents.push({
+            x,
+            y,
+            width: isEnlarged ? LARGE_WIDTH : WIDTH,
+            height: isEnlarged ? LARGE_HEIGHT : HEIGHT,
+            image: isHovered ? images[imageIndex] : imagesGrayscale[imageIndex],
+            onMouseEnter: () => handleMouseEnter(x, y),
+            onMouseLeave: () => handleMouseLeave(x, y),
+          });
+        }
       }
     }
 
@@ -249,20 +285,28 @@ const App = () => {
       return 0;
     });
 
-    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => (
-      <ImageGrid
-        key={`${x}-${y}`}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        image={image}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onClick={() => handleClick(x, y)}
-      />
-    ));
-  }, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid]);
+
+
+    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => {
+      if (hiddenImage && hiddenImage.x === x && hiddenImage.y === y) {
+        return null;
+      }
+
+      return (
+        <ImageGrid
+          key={`${x}-${y}`}
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          image={image}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onClick={() => handleClick(x, y)}
+        />
+      );
+    });
+}, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid, hiddenImage, isUnderLargeImage]);
 
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
@@ -275,14 +319,6 @@ const App = () => {
     const initX = x - centerX;
     const initY = y - centerY;
 
-    const handleClickOnEnlargedImage = () => {
-      setIsReturning(true);
-      setTimeout(() => {
-        setEnlargedImgData(null);
-        setIsReturning(false);
-      }, 1000);
-    };
-
     return (
       <div
         onClick={handleClickOnEnlargedImage}
@@ -293,12 +329,15 @@ const App = () => {
           width: width,
           height: height,
           zIndex: 999,
-          animation: isReturning ? "move-to-origin 1s forwards" : "move-to-center 1s forwards",
+          animationName: isReturning ? "move-to-origin" : "move-to-center",
+          animationDuration: "1s",
+          animationFillMode: "forwards",
           animationTimingFunction: "ease-in-out",
           '--init-x': `${initX}px`,
           '--init-y': `${initY}px`,
         }}
       >
+
         <img
           src={src}
           alt="Enlarged"
@@ -313,26 +352,33 @@ const App = () => {
     );
   }, [enlargedImgData, windowWidth, windowHeight, isReturning]);
 
-  const WhiteCover = useMemo(() => {
-    if (!whiteCoverData) return null;
+  const BlackBackground = useMemo(() => {
+    if (!showBlackBackground && !isFadingOut) return null;
 
-    const { x, y, width, height } = whiteCoverData;
+    const animationClass = isFadingOut ? "fadeOut" : "fadeIn";
 
     return (
       <div
+        onClick={handleClickOnEnlargedImage}
+        className={animationClass}
         style={{
           position: "fixed",
-          top: y,
-          left: x,
-          width: width,
-          height: height,
-          backgroundColor: "rgb(245, 245, 245)",
-          zIndex: 997,
-          pointerEvents: "none",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 1)",
+          zIndex: 998,
+          animationDuration: "1s",
         }}
       />
     );
-  }, [whiteCoverData]);
+  }, [showBlackBackground, isFadingOut]);
+
+
+
+
+
 
   return (
     <>
@@ -351,7 +397,7 @@ const App = () => {
         <Layer>{renderGridComponents}</Layer>
       </Stage>
       {EnlargedImageComponent}
-      {/* {WhiteCover} */}
+      {BlackBackground}
     </>
   );
 };
