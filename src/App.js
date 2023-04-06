@@ -266,15 +266,15 @@ const App = () => {
 
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
-  
+
     const { src, x, y, width, height } = enlargedImgData;
-  
+
     const centerX = windowWidth / 2 - width / 2;
     const centerY = windowHeight / 2 - height / 2;
-  
+
     const initX = x - centerX;
     const initY = y - centerY;
-  
+
     const handleClickOnEnlargedImage = () => {
       setIsReturning(true);
       setTimeout(() => {
@@ -282,7 +282,7 @@ const App = () => {
         setIsReturning(false);
       }, 1000);
     };
-  
+
     return (
       <div
         onClick={handleClickOnEnlargedImage}
@@ -292,7 +292,7 @@ const App = () => {
           left: centerX,
           width: width,
           height: height,
-          zIndex: 1000,
+          zIndex: 999,
           animation: isReturning ? "move-to-origin 1s forwards" : "move-to-center 1s forwards",
           animationTimingFunction: "ease-in-out",
           '--init-x': `${initX}px`,
@@ -315,9 +315,9 @@ const App = () => {
 
   const WhiteCover = useMemo(() => {
     if (!whiteCoverData) return null;
-  
+
     const { x, y, width, height } = whiteCoverData;
-  
+
     return (
       <div
         style={{
@@ -326,8 +326,8 @@ const App = () => {
           left: x,
           width: width,
           height: height,
-          backgroundColor: "white",
-          zIndex: 999,
+          backgroundColor: "rgb(245, 245, 245)",
+          zIndex: 997,
           pointerEvents: "none",
         }}
       />
@@ -337,6 +337,7 @@ const App = () => {
   return (
     <>
       <Stage
+        className="container"
         x={stagePos.x}
         y={stagePos.y}
         width={windowWidth}
@@ -350,7 +351,7 @@ const App = () => {
         <Layer>{renderGridComponents}</Layer>
       </Stage>
       {EnlargedImageComponent}
-      {WhiteCover}
+      {/* {WhiteCover} */}
     </>
   );
 };
