@@ -140,7 +140,7 @@ const App = () => {
       const timer = setTimeout(() => {
         setShowBlackBackground(false);
         setIsFadingOut(false);
-      }, 1000);
+      }, 500);
 
       return () => clearTimeout(timer);
     }
@@ -219,7 +219,7 @@ const App = () => {
       setHiddenImage(null);
       setEnlargedImgData(null);
       setIsReturning(false);
-    }, 1000);
+    }, 500);
     setIsFadingOut(true);
   };
   
@@ -330,7 +330,7 @@ const App = () => {
           height: height,
           zIndex: 999,
           animationName: isReturning ? "move-to-origin" : "move-to-center",
-          animationDuration: "1s",
+          animationDuration: "0.5s",
           animationFillMode: "forwards",
           animationTimingFunction: "ease-in-out",
           '--init-x': `${initX}px`,
@@ -369,7 +369,7 @@ const App = () => {
           height: "100%",
           backgroundColor: "rgba(0, 0, 0, 1)",
           zIndex: 998,
-          animationDuration: "1s",
+          animationDuration: "0.5s",
         }}
       />
     );
