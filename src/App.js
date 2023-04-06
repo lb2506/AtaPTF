@@ -16,22 +16,22 @@ const bigProjects = [0, 6, 11];
 const bigProjetsFerequency = 3;
 
 const imageURLs = [
-  "/assets/0.jpg", // 0
-  "/assets/1.jpg", // 1
-  "/assets/2.jpg", // 2
-  "/assets/3.jpg", // 3
-  "/assets/4.jpg", // 4
-  "/assets/5.jpg", // 5
-  "/assets/6.jpg", // 6
-  "/assets/7.jpg", // 7
-  "/assets/8.jpg", // 8
-  "/assets/9.jpg", // 9
-  "/assets/10.jpg", // 10
-  "/assets/11.jpg", // 11
-  "/assets/12.jpg", // 12
-  "/assets/13.jpg", // 13
-  "/assets/14.jpg", // 14
-  "/assets/15.jpg", // 15
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/0_sksnpj.jpg", // 0
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/1_bh663m.jpg", // 1
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/2_jf5xgp.jpg", // 2
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/3_d4sn5r.jpg", // 3
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/4_oqrqba.jpg", // 4
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/5_ei2bme.jpg", // 5
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/6_umckuq.jpg", // 6
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/7_robbgj.jpg", // 7
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/8_ltzp3n.jpg", // 8
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/9_p7vjt4.jpg", // 9
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/10_f6t8op.jpg", // 10
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/11_pbb9e2.jpg", // 11
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/12_vugunh.jpg", // 12
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/13_zuqlhd.jpg", // 13
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/14_dponuc.jpg", // 14
+  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/15_fet1if.jpg", // 15
 ];
 
 const generateDeterministicImageIndexGrid = (size) => {
