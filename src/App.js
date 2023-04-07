@@ -319,9 +319,11 @@ const App = () => {
     const initX = x - centerX;
     const initY = y - centerY;
 
+
     return (
+
       <div
-        onClick={handleClickOnEnlargedImage}
+        // onClick={handleClickOnEnlargedImage}
         style={{
           position: "fixed",
           top: centerY,
@@ -329,7 +331,7 @@ const App = () => {
           width: width,
           height: height,
           zIndex: 999,
-          animationName: isReturning ? "move-to-origin" : "move-to-center",
+          animationName: isReturning ? `move-to-origin-${width && height === 250 ? "small" : "big"}` : `move-to-center-${width && height === 250 ? "small" : "big"}`,
           animationDuration: "0.5s",
           animationFillMode: "forwards",
           animationTimingFunction: "ease-in-out",

@@ -1,4 +1,4 @@
-@keyframes move-to-center {
+@keyframes move-to-center-big {
   from {
     transform: translate(var(--init-x), var(--init-y));
   }
@@ -8,7 +8,7 @@
   }
 }
 
-@keyframes move-to-origin {
+@keyframes move-to-origin-big {
   from {
     transform: translate(0, 0);
   }
@@ -17,6 +17,28 @@
     transform: translate(var(--init-x), var(--init-y));
   }
 }
+
+@keyframes move-to-center-small {
+  from {
+    transform: translate(var(--init-x), var(--init-y)) scale(1);
+  }
+
+  to {
+    transform: translate(0, 0) scale(2.1);
+  }
+}
+
+@keyframes move-to-origin-small {
+  from {
+    transform: translate(0, 0) scale(2.1);
+  }
+
+  to {
+    transform: translate(var(--init-x), var(--init-y)) scale(1);
+  }
+}
+
+
 
 @keyframes fadeIn {
   0% {
