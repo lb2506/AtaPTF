@@ -67,3 +67,21 @@
 .fadeOut {
   animation: fadeOut 0.5s forwards;
 }
+
+
+
+@keyframes fadeOutImg {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fade-out-img {
+  animation-name: fadeOutImg;
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+}
+

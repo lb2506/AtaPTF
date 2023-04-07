@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Stage, Layer, Image as KonvaImage } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import "konva/lib/filters/Grayscale";
 import "./App.css";
 import "./animations.css";
 
+import EnlargedImage from "./components/EnlargedImage";
+import ImageGridComponent from './components/ImageGridComponent';
+import BlackBackground from "./components/BlackBackground";
+import { useWindowSize } from './hooks/useWindowSize';
+import { useLoadedImages } from './hooks/useLoadedImages';
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -49,83 +54,8 @@ const generateDeterministicImageIndexGrid = (size) => {
   return grid;
 };
 
-const loadImages = (urls) => {
-  return Promise.all(urls.map((url) => {
-    return new Promise((resolve, reject) => {
-      const image = new window.Image();
-      image.crossOrigin = "anonymous";
-      image.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0);
-        ctx.globalCompositeOperation = 'saturation';
-        ctx.fillStyle = 'hsl(0, 0%, 100%)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = 'color';
-        ctx.fillStyle = 'hsl(0, 0%, 0%)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const grayscaleImage = new window.Image();
-        grayscaleImage.onload = () => {
-          resolve({ color: image, grayscale: grayscaleImage });
-        };
-        grayscaleImage.src = canvas.toDataURL();
-      };
-      image.onerror = (err) => reject(err);
-      image.src = url;
-    });
-  }));
-};
-
-const ImageGrid = React.memo(({
-  x,
-  y,
-  width,
-  height,
-  image,
-  onMouseEnter,
-  onMouseLeave,
-  onClick,
-}) => {
-  return (
-    <KonvaImage
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      image={image}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-    />
-  );
-});
-
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return windowSize;
-};
-
 const App = () => {
   const [stagePos, setStagePos] = useState({ x: -50, y: 0 });
-  const [images, setImages] = useState([]);
-  const [imagesGrayscale, setImagesGrayscale] = useState([]);
   const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
   const [enlargedImgData, setEnlargedImgData] = useState(null);
@@ -133,7 +63,7 @@ const App = () => {
   const [showBlackBackground, setShowBlackBackground] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [hiddenImage, setHiddenImage] = useState(null);
-
+  const { images, imagesGrayscale } = useLoadedImages(imageURLs);
 
   useEffect(() => {
     if (isFadingOut) {
@@ -146,31 +76,22 @@ const App = () => {
     }
   }, [isFadingOut]);
 
-
-
-  useEffect(() => {
-    loadImages(imageURLs).then((loadedImages) => {
-      setImages(loadedImages.map(img => img.color));
-      setImagesGrayscale(loadedImages.map(img => img.grayscale));
-    });
-  }, []);
-
   const isUnderLargeImage = useCallback((x, y, gridSize, bigProjetsFerequency) => {
     const checkPosition = (x, y) => {
       const indexX = Math.abs(x / (WIDTH + MARGIN)) % gridSize;
       const indexY = Math.abs(y / (HEIGHT + MARGIN)) % gridSize;
-  
+
       const imageIndex = randomImageIndexGrid[indexX][indexY];
       return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
     };
-  
+
     const left = checkPosition(x - (WIDTH + MARGIN), y);
     const top = checkPosition(x, y - (HEIGHT + MARGIN));
     const topLeft = checkPosition(x - (WIDTH + MARGIN), y - (HEIGHT + MARGIN));
-  
+
     return left || top || topLeft;
   }, [randomImageIndexGrid]);
-  
+
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -215,15 +136,13 @@ const App = () => {
   const handleClickOnEnlargedImage = () => {
     setIsReturning(true);
     setTimeout(() => {
-      handleMouseLeave(hiddenImage.x, hiddenImage.y); // Ajouté cette ligne
+      handleMouseLeave(hiddenImage.x, hiddenImage.y);
       setHiddenImage(null);
       setEnlargedImgData(null);
       setIsReturning(false);
     }, 500);
     setIsFadingOut(true);
   };
-  
-
 
   const shouldEnlargeFirstImage = (x, y, imageIndex) => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
@@ -250,137 +169,18 @@ const App = () => {
     setShowBlackBackground(true);
   }, [randomImageIndexGrid, images, stagePos]);
 
-
-
-  const renderGridComponents = useMemo(() => {
-    const gridComponents = [];
-    for (let x = startX; x < endX; x += WIDTH + MARGIN) {
-      for (let y = startY; y < endY; y += HEIGHT + MARGIN) {
-        if (!isUnderLargeImage(x, y, GRID_SIZE, bigProjetsFerequency)) {
-          const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
-          const indexY = Math.abs(y / (HEIGHT + MARGIN)) % GRID_SIZE;
-
-          const imageIndex = randomImageIndexGrid[indexX][indexY];
-
-          const isHovered = hoveredImageIndices[`${x}-${y}`] === true;
-
-          const isEnlarged = shouldEnlargeFirstImage(x, y, imageIndex);
-
-          gridComponents.push({
-            x,
-            y,
-            width: isEnlarged ? LARGE_WIDTH : WIDTH,
-            height: isEnlarged ? LARGE_HEIGHT : HEIGHT,
-            image: isHovered ? images[imageIndex] : imagesGrayscale[imageIndex],
-            onMouseEnter: () => handleMouseEnter(x, y),
-            onMouseLeave: () => handleMouseLeave(x, y),
-          });
-        }
-      }
-    }
-
-    gridComponents.sort((a, b) => {
-      if (a.width > b.width) return 1;
-      if (a.width < b.width) return -1;
-      return 0;
-    });
-
-
-
-    return gridComponents.map(({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => {
-      if (hiddenImage && hiddenImage.x === x && hiddenImage.y === y) {
-        return null;
-      }
-
-      return (
-        <ImageGrid
-          key={`${x}-${y}`}
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          image={image}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onClick={() => handleClick(x, y)}
-        />
-      );
-    });
-}, [startX, endX, startY, endY, hoveredImageIndices, images, imagesGrayscale, handleMouseEnter, handleMouseLeave, handleClick, randomImageIndexGrid, hiddenImage, isUnderLargeImage]);
-
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
 
-    const { src, x, y, width, height } = enlargedImgData;
-
-    const centerX = windowWidth / 2 - width / 2;
-    const centerY = windowHeight / 2 - height / 2;
-
-    const initX = x - centerX;
-    const initY = y - centerY;
-
-
     return (
-
-      <div
-        // onClick={handleClickOnEnlargedImage}
-        style={{
-          position: "fixed",
-          top: centerY,
-          left: centerX,
-          width: width,
-          height: height,
-          zIndex: 999,
-          animationName: isReturning ? `move-to-origin-${width && height === 250 ? "small" : "big"}` : `move-to-center-${width && height === 250 ? "small" : "big"}`,
-          animationDuration: "0.5s",
-          animationFillMode: "forwards",
-          animationTimingFunction: "ease-in-out",
-          '--init-x': `${initX}px`,
-          '--init-y': `${initY}px`,
-        }}
-      >
-
-        <img
-          src={src}
-          alt="Enlarged"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
-    );
-  }, [enlargedImgData, windowWidth, windowHeight, isReturning]);
-
-  const BlackBackground = useMemo(() => {
-    if (!showBlackBackground && !isFadingOut) return null;
-
-    const animationClass = isFadingOut ? "fadeOut" : "fadeIn";
-
-    return (
-      <div
-        onClick={handleClickOnEnlargedImage}
-        className={animationClass}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 1)",
-          zIndex: 998,
-          animationDuration: "0.5s",
-        }}
+      <EnlargedImage
+        enlargedImgData={enlargedImgData}
+        windowWidth={windowWidth}
+        windowHeight={windowHeight}
+        isReturning={isReturning}
       />
     );
-  }, [showBlackBackground, isFadingOut]);
-
-
-
-
-
+  }, [enlargedImgData, windowWidth, windowHeight, isReturning]);
 
   return (
     <>
@@ -396,10 +196,38 @@ const App = () => {
           setStagePos(e.currentTarget.position());
         }}
       >
-        <Layer>{renderGridComponents}</Layer>
+        <Layer>
+          <ImageGridComponent
+            startX={startX}
+            endX={endX}
+            startY={startY}
+            endY={endY}
+            hoveredImageIndices={hoveredImageIndices}
+            images={images}
+            imagesGrayscale={imagesGrayscale}
+            handleMouseEnter={handleMouseEnter}
+            handleMouseLeave={handleMouseLeave}
+            handleClick={handleClick}
+            randomImageIndexGrid={randomImageIndexGrid}
+            hiddenImage={hiddenImage}
+            isUnderLargeImage={isUnderLargeImage}
+            WIDTH={WIDTH}
+            HEIGHT={HEIGHT}
+            MARGIN={MARGIN}
+            GRID_SIZE={GRID_SIZE}
+            bigProjetsFerequency={bigProjetsFerequency}
+            LARGE_HEIGHT={LARGE_HEIGHT}
+            LARGE_WIDTH={LARGE_WIDTH}
+            shouldEnlargeFirstImage={shouldEnlargeFirstImage}
+          />
+        </Layer>
       </Stage>
       {EnlargedImageComponent}
-      {BlackBackground}
+      <BlackBackground
+        showBlackBackground={showBlackBackground}
+        isFadingOut={isFadingOut}
+        handleClickOnEnlargedImage={handleClickOnEnlargedImage}
+      />
     </>
   );
 };
