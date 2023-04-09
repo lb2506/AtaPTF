@@ -9,6 +9,8 @@ import ImageGridComponent from './components/ImageGridComponent';
 import BlackBackground from "./components/BlackBackground";
 import { useWindowSize } from './hooks/useWindowSize';
 import { useLoadedImages } from './hooks/useLoadedImages';
+import ProjectDetails from './components/ProjectDetails';
+import projects from './projects.json';
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -20,24 +22,7 @@ const GRID_SIZE = 100;
 const bigProjects = [0, 6, 11];
 const bigProjetsFerequency = 3;
 
-const imageURLs = [
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/0_sksnpj.jpg", // 0
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/1_bh663m.jpg", // 1
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/2_jf5xgp.jpg", // 2
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/3_d4sn5r.jpg", // 3
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/4_oqrqba.jpg", // 4
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/5_ei2bme.jpg", // 5
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/6_umckuq.jpg", // 6
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/7_robbgj.jpg", // 7
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798737/PorteFolio%20Atabak/8_ltzp3n.jpg", // 8
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/9_p7vjt4.jpg", // 9
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/10_f6t8op.jpg", // 10
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/11_pbb9e2.jpg", // 11
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/12_vugunh.jpg", // 12
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/13_zuqlhd.jpg", // 13
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/14_dponuc.jpg", // 14
-  "https://res.cloudinary.com/dslilw3b5/image/upload/v1680798738/PorteFolio%20Atabak/15_fet1if.jpg", // 15
-];
+const imageURLs = projects.map((project) => project.imageURL);
 
 const generateDeterministicImageIndexGrid = (size) => {
   const rowCoefficient = 6;
@@ -64,6 +49,8 @@ const App = () => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [hiddenImage, setHiddenImage] = useState(null);
   const { images, imagesGrayscale } = useLoadedImages(imageURLs);
+  const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     if (isFadingOut) {
@@ -144,6 +131,7 @@ const App = () => {
     setIsFadingOut(true);
   };
 
+
   const shouldEnlargeFirstImage = (x, y, imageIndex) => {
     return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
   };
@@ -167,6 +155,10 @@ const App = () => {
 
     setHiddenImage({ x, y, imageIndex });
     setShowBlackBackground(true);
+    setSelectedProject(projects[imageIndex]);
+    setTimeout(() => {
+      setShowProjectDetails(true); // Afficher les détails du projet
+    }, 500)
   }, [randomImageIndexGrid, images, stagePos]);
 
   const EnlargedImageComponent = useMemo(() => {
@@ -222,6 +214,10 @@ const App = () => {
           />
         </Layer>
       </Stage>
+      <ProjectDetails
+        showDetails={showProjectDetails}
+        project={selectedProject}
+      />
       {EnlargedImageComponent}
       <BlackBackground
         showBlackBackground={showBlackBackground}

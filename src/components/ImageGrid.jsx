@@ -1,4 +1,3 @@
-// ImageGrid.js
 import React from "react";
 import { Image as KonvaImage } from "react-konva";
 
