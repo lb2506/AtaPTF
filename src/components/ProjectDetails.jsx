@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import './ProjectDetails.css';
 
-const ProjectDetails = ({ showDetails, project }) => {
+const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnlargedImage }) => {
   const [centerImage, setCenterImage] = useState(true);
   const [animationFinished, setAnimationFinished] = useState(false);
 
@@ -21,73 +22,71 @@ const ProjectDetails = ({ showDetails, project }) => {
     }
   }, [showDetails]);
 
+  const handleClick = () => {
+    setAnimationFinished(false);
+    const timer = setTimeout(() => {
+      setCenterImage(true);
+    }, 500);
+
+    const closeDelay = setTimeout(() => {
+      onDetailsClose();
+    }, 1000);
+
+    const closeDetails = setTimeout(() => {
+      handleClickOnEnlargedImage()
+    }, 1500)
+    
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(closeDelay);
+      clearTimeout(closeDetails)
+    };
+  };
+
   if (!showDetails || !project) return null;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'black',
-        zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <div style={{
-        width: "80%",
-        backgroundColor: "rgba(255,255,255, 0.1",
-        display: "flex ",
-        alignItems: 'center',
-        position: 'relative',
-      }}>
+    <div className="project-details">
+      <div className="details-container">
         <img
           src={project.imageURL}
           alt='project'
-          style={{
-            width: "530px",
-            height: "530px",
-            position: animationFinished ? 'static' : 'absolute',
-            top: animationFinished ? undefined : '50%',
-            left: animationFinished ? undefined : (centerImage ? '50%' : '0%'),
-            transform: animationFinished ? undefined : (centerImage ? 'translate(-50%, -50%)' : 'translate(0, -50%)'),
-            transition: centerImage || !animationFinished ? 'left 0.5s ease, transform 0.5s ease' : undefined,
-          }}
+          onClick={handleClick}
+          className={`project-image ${animationFinished ? 'static' : ''} ${centerImage ? 'center' : 'left'}`}
         />
         <div
+          className="project-text"
           style={{
             display: animationFinished ? 'block' : 'none',
-            width: '100%',
-            height: '530px',
-            marginLeft: '5%'
           }}
         >
-          <div
-          style={{
-            display:'flex',
-            flexDirection:'column',
-            justifyContent:'space-between',
-            height:'100%'
-          }}>
-            <h1
-              style={{
-                color: 'white',
-                fontSize: '50px'
-              }}
-            >TITRE</h1>
+          <div className={`project-text-content ${animationFinished ? 'fadeIn' : ''}`}>
+            <h1 className="title">TITLE</h1>
             <div>
-              <h1
-                style={{
-                  color: 'white',
-                  fontSize: '35px'
-                }}
-              >
-                Spécifications
-              </h1>
+              <h1 className="specifications">Specifications</h1>
+              <ul>
+                <li>
+                  <span>COMPLETED</span>
+                  <span>March 2023</span>
+                </li>
+                <li>
+                  <span>TYPE</span>
+                  <span>Brand Identity</span>
+                </li>
+                <li>
+                  <span>ROLE</span>
+                  <span>Creztive Director</span>
+                </li>
+                <li>
+                  <span>CLIENT</span>
+                  <span>Sneakmart.</span>
+                </li>
+                <li>
+                  <span>DESCRIPTION</span>
+                  <span>Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.</span>
+                </li>
+                
+              </ul>
             </div>
           </div>
         </div>

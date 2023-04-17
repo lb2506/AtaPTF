@@ -24,13 +24,13 @@
   }
 
   to {
-    transform: translate(0, 0) scale(2.1);
+    transform: translate(0, 0) scale(2.12);
   }
 }
 
 @keyframes move-to-origin-small {
   from {
-    transform: translate(0, 0) scale(2.1);
+    transform: translate(0, 0) scale(2.12);
   }
 
   to {
@@ -84,4 +84,3 @@
   animation-duration: 500ms;
   animation-fill-mode: forwards;
 }
-

@@ -1,0 +1,93 @@
+.project-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .details-container {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .project-image {
+    width: 530px;
+    height: 530px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.5s ease;
+  }
+  
+  .project-image.center {
+    left: calc(50% - 265px);
+  }
+  
+  .project-image.left {
+    left: 0;
+  }
+  
+  .project-image.static {
+    position: static;
+    transform: none;
+  }
+  
+  .project-text {
+    width: 100%;
+    height: 530px;
+    margin-left: 5%;
+  }
+  
+  .project-text-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .project-text-content ul{
+    color: white;
+    list-style: none;
+  }
+
+  .project-text-content li{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-top: 1px white solid;
+  }
+
+  .project-text-content li span{
+   max-width: 50%;
+   text-align: end;
+  }
+
+  .fadeIn {
+    opacity: 1;
+  }
+
+  .fadeOut{
+    opacity: 0;
+  }
+  
+  .title {
+    color: white;
+    font-size: 50px;
+  }
+  
+  .specifications {
+    color: white;
+    font-size: 35px;
+    margin-bottom: 30px;
+  }
+  

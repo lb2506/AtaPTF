@@ -157,7 +157,7 @@ const App = () => {
     setShowBlackBackground(true);
     setSelectedProject(projects[imageIndex]);
     setTimeout(() => {
-      setShowProjectDetails(true); // Afficher les détails du projet
+      setShowProjectDetails(true);
     }, 500)
   }, [randomImageIndexGrid, images, stagePos]);
 
@@ -217,12 +217,13 @@ const App = () => {
       <ProjectDetails
         showDetails={showProjectDetails}
         project={selectedProject}
+        handleClickOnEnlargedImage={handleClickOnEnlargedImage}
+        onDetailsClose={() => setShowProjectDetails(false)}
       />
       {EnlargedImageComponent}
       <BlackBackground
         showBlackBackground={showBlackBackground}
         isFadingOut={isFadingOut}
-        handleClickOnEnlargedImage={handleClickOnEnlargedImage}
       />
     </>
   );
