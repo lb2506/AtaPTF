@@ -24,13 +24,13 @@
   }
 
   to {
-    transform: translate(0, 0) scale(2.12);
+    transform: translate(0, 0) scale(2.06);
   }
 }
 
 @keyframes move-to-origin-small {
   from {
-    transform: translate(0, 0) scale(2.12);
+    transform: translate(0, 0) scale(2.06);
   }
 
   to {

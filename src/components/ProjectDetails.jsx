@@ -67,23 +67,23 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
               <ul>
                 <li>
                   <span>COMPLETED</span>
-                  <span>March 2023</span>
+                  <span>{project.completed}</span>
                 </li>
                 <li>
                   <span>TYPE</span>
-                  <span>Brand Identity</span>
+                  <span>{project.type}</span>
                 </li>
                 <li>
                   <span>ROLE</span>
-                  <span>Creztive Director</span>
+                  <span>{project.role}</span>
                 </li>
                 <li>
                   <span>CLIENT</span>
-                  <span>Sneakmart.</span>
+                  <span>{project.client}</span>
                 </li>
                 <li>
                   <span>DESCRIPTION</span>
-                  <span>Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.</span>
+                  <span>{project.description}</span>
                 </li>
                 
               </ul>

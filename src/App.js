@@ -14,9 +14,9 @@ import projects from './projects.json';
 
 const WIDTH = 250;
 const HEIGHT = 250;
-const LARGE_WIDTH = 530;
-const LARGE_HEIGHT = 530;
-const MARGIN = 30;
+const LARGE_WIDTH = 514;
+const LARGE_HEIGHT = 514;
+const MARGIN = 16;
 const GRID_SIZE = 100;
 
 const bigProjects = [0, 6, 11];
