@@ -28,6 +28,7 @@
   top: 50%;
   transform: translateY(-50%);
   transition: left 0.5s ease;
+  cursor: pointer;
 }
 
 .project-image.center {
@@ -111,6 +112,8 @@
 .details-container-bottom-desc-one {
   margin: 50px 0;
   line-height: 25px;
+  font-weight: bold;
+  text-align: justify;
 }
 
 .details-container-bottom-desc-two {
@@ -119,6 +122,8 @@
   align-items: flex-end;
   margin-bottom: 20px;
   line-height: 25px;
+  font-weight: bold;
+  text-align: justify;
 }
 
 .project-image-thumbnail {
