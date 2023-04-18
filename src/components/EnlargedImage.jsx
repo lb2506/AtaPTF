@@ -43,4 +43,4 @@ const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClick
   );
 };
 
-export default EnlargedImage;
+export default React.memo(EnlargedImage);

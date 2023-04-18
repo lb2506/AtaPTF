@@ -31,4 +31,4 @@ const CornerTexts = ({ project }) => {
     );
 };
 
-export default CornerTexts;
+export default React.memo(CornerTexts);

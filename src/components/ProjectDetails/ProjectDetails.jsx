@@ -137,4 +137,4 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
   );
 };
 
-export default ProjectDetails;
+export default React.memo(ProjectDetails);

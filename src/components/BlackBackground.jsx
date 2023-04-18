@@ -29,4 +29,4 @@ const BlackBackground = ({
   );
 };
 
-export default BlackBackground;
+export default React.memo(BlackBackground);
