@@ -35,7 +35,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
     const closeDetails = setTimeout(() => {
       handleClickOnEnlargedImage()
     }, 1500)
-    
+
     return () => {
       clearTimeout(timer);
       clearTimeout(closeDelay);
@@ -51,10 +51,10 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
   };
 
   return (
-    <div 
-    style={{ ...cssVars }}
-    className="project-details">
-      <div className="details-container">
+    <div
+      style={{ ...cssVars }}
+      className="project-details">
+      <div className="details-container-top">
         <img
           src={project.imageURL}
           alt='project'
@@ -92,9 +92,44 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
                   <span>DESCRIPTION</span>
                   <span>{project.description}</span>
                 </li>
-                
+
               </ul>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          display: animationFinished ? 'block' : 'none',
+        }}
+        className={`details-container-bottom ${animationFinished ? 'fadeInDesc' : ''}`}>
+        <img
+          style={{
+            width: '100%',
+            height: '514px',
+            objectFit: "cover"
+          }}
+          src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+          alt='img'
+        />
+        <p className="details-container-bottom-desc-one">Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.</p>
+        <div className='details-container-bottom-pictures'>
+          <img className="project-image-thumbnail"
+            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            alt='img'
+          />
+          <img className="project-image-thumbnail"
+            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            alt='img'
+          />
+          <img className="project-image-thumbnail"
+            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            alt='img'
+          />
+          <div className="details-container-bottom-desc-two">
+            <p>
+              Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.
+            </p>
           </div>
         </div>
       </div>
