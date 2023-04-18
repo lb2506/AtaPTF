@@ -109,21 +109,21 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
             height: '514px',
             objectFit: "cover"
           }}
-          src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+          src={project.imagesBottom}
           alt='img'
         />
         <p className="details-container-bottom-desc-one">Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.</p>
         <div className='details-container-bottom-pictures'>
           <img className="project-image-thumbnail"
-            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            src={project.imagesBottom}
             alt='img'
           />
           <img className="project-image-thumbnail"
-            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            src={project.imagesBottom}
             alt='img'
           />
           <img className="project-image-thumbnail"
-            src='https://pixabay.com/get/g4dd0df3bab65b6de54c60a65fc4961c30b2f131e9f46b80508267e4ea8fcd80e4f59fc5374997a3e376a13fdce04f37727b553f422395c0abdc4b103c852010f234798917bc65ed4c3f8a1702931c79b_1920.jpg'
+            src={project.imagesBottom}
             alt='img'
           />
           <div className="details-container-bottom-desc-two">
