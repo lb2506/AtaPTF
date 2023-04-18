@@ -9,8 +9,9 @@ import ImageGridComponent from './components/ImageGridComponent';
 import BlackBackground from "./components/BlackBackground";
 import { useWindowSize } from './hooks/useWindowSize';
 import { useLoadedImages } from './hooks/useLoadedImages';
-import ProjectDetails from './components/ProjectDetails';
+import ProjectDetails from './components/ProjectDetails/ProjectDetails';
 import projects from './projects.json';
+import CornerTexts from "./components/CornerTexts/CornerTexts";
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -127,6 +128,7 @@ const App = () => {
       setHiddenImage(null);
       setEnlargedImgData(null);
       setIsReturning(false);
+      setSelectedProject(null)
     }, 500);
     setIsFadingOut(true);
   };
@@ -176,6 +178,9 @@ const App = () => {
 
   return (
     <>
+      <CornerTexts
+        project={selectedProject}
+      />
       <Stage
         className="container"
         x={stagePos.x}
@@ -224,6 +229,7 @@ const App = () => {
       <BlackBackground
         showBlackBackground={showBlackBackground}
         isFadingOut={isFadingOut}
+        project={selectedProject}
       />
     </>
   );

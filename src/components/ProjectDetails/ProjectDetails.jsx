@@ -45,8 +45,15 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
   if (!showDetails || !project) return null;
 
+  const cssVars = {
+    '--color1': project.color1,
+    '--color2': project.color2
+  };
+
   return (
-    <div className="project-details">
+    <div 
+    style={{ ...cssVars }}
+    className="project-details">
       <div className="details-container">
         <img
           src={project.imageURL}
@@ -61,7 +68,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           }}
         >
           <div className={`project-text-content ${animationFinished ? 'fadeIn' : ''}`}>
-            <h1 className="title">TITLE</h1>
+            <h1 className="title">{project.title}</h1>
             <div>
               <h1 className="specifications">Specifications</h1>
               <ul>

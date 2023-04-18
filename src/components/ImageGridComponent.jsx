@@ -80,4 +80,4 @@ const ImageGridComponent = ({
   );
 };
 
-export default ImageGridComponent;
+export default React.memo(ImageGridComponent);
