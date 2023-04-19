@@ -1,11 +1,18 @@
 import React from 'react';
 import './CornerTexts.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const CornerTexts = ({ project }) => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const cssVars = {
         '--color2': project ? project.color2 : "#FFFFFF"
     };
+
+    const isHome = location.pathname === "/";
+    const isContact = location.pathname === "/contact";
 
     return (
         <div
@@ -16,10 +23,10 @@ const CornerTexts = ({ project }) => {
                 <span>DIRECTOR</span>
             </div>
             <nav className="top-right-menu">
-                <ul>
-                    <li>CANVAS</li>
+            <ul>
+                    <li onClick={() => navigate("/")} className={isHome ? 'bold' : ''}>CANVAS</li>
                     <li>CATEGORY</li>
-                    <li>CONTACT</li>
+                    <li onClick={() => navigate("/contact")} className={isContact ? 'bold' : ''}>CONTACT</li>
                 </ul>
             </nav>
             <div className="bottom-right-links">

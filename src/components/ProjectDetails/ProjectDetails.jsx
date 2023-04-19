@@ -98,39 +98,30 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           </div>
         </div>
       </div>
-      <div
-        style={{
-          display: animationFinished ? 'block' : 'none',
-        }}
-        className={`details-container-bottom ${animationFinished ? 'fadeInDesc' : ''}`}>
-        <img
-          style={{
-            width: '100%',
-            height: '514px',
-            objectFit: "cover"
-          }}
-          src={project.imagesBottom}
-          alt='img'
-        />
-        <p className="details-container-bottom-desc-one">Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.</p>
+      <div style={{ display: animationFinished ? 'block' : 'none' }} className={`details-container-bottom ${animationFinished ? 'fadeInDesc' : ''}`}>
+        {project.mainImageBottom &&
+          <img
+            className='project-image-main'
+            src={project.mainImageBottom}
+            alt='img'
+          />
+        }
+        {project.firstDescription &&
+          <p className="details-container-bottom-desc-one">{project.firstDescription}</p>
+        }
         <div className='details-container-bottom-pictures'>
-          <img className="project-image-thumbnail"
-            src={project.imagesBottom}
-            alt='img'
-          />
-          <img className="project-image-thumbnail"
-            src={project.imagesBottom}
-            alt='img'
-          />
-          <img className="project-image-thumbnail"
-            src={project.imagesBottom}
-            alt='img'
-          />
-          <div className="details-container-bottom-desc-two">
-            <p>
-              Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado. Artwork projection for the Denver Theatre District displayed on the Daniels & Ficher Tower, a historic landmark in Denver, Colorado.
-            </p>
-          </div>
+          {project.imagesBottom && project.imagesBottom.map((url, index) =>
+            <img className="project-image-bottom"
+              key={index}
+              src={url}
+              alt='img'
+            />
+          )}
+          {project.secondeDescription &&
+            <div className="details-container-bottom-desc-two">
+              <p>{project.secondeDescription}</p>
+            </div>
+          }
         </div>
       </div>
     </div>
