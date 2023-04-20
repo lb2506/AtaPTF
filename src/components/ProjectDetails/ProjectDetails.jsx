@@ -3,7 +3,8 @@ import './ProjectDetails.css';
 
 const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnlargedImage }) => {
   const [centerImage, setCenterImage] = useState(true);
-  const [animationFinished, setAnimationFinished] = useState(false);
+  const [animationFinished, setAnimationFinished] = useState(null);
+  const [animationFinishedFirstTime, setAnimationFinishedFirstTime] = useState(null)
 
   useEffect(() => {
     if (showDetails) {
@@ -13,6 +14,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
       const animationTimer = setTimeout(() => {
         setAnimationFinished(true);
+        setAnimationFinishedFirstTime(true);
       }, 1000);
 
       return () => {
@@ -34,6 +36,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
     const closeDetails = setTimeout(() => {
       handleClickOnEnlargedImage()
+      setAnimationFinishedFirstTime(null);
     }, 1500)
 
     return () => {
@@ -98,7 +101,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           </div>
         </div>
       </div>
-      <div style={{ display: animationFinished ? 'block' : 'none' }} className={`details-container-bottom ${animationFinished ? 'fadeInDesc' : ''}`}>
+      <div style={{ display: animationFinished ? 'block' : animationFinishedFirstTime ? 'block' : 'none' }} className={`details-container-bottom ${animationFinished && animationFinishedFirstTime ? 'fadeInDesc' : 'fadeOutDesc'}`}>
         {project.mainImageBottom &&
           <img
             className='project-image-main'

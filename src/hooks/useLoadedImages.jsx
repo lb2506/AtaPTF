@@ -23,7 +23,10 @@ const loadImages = (urls) => {
                 grayscaleImage.onload = () => {
                     resolve({ color: image, grayscale: grayscaleImage });
                 };
-                grayscaleImage.src = canvas.toDataURL();
+
+                canvas.toBlob((blob) => {
+                    grayscaleImage.src = URL.createObjectURL(blob);
+                }, 'image/webp');
             };
             image.onerror = (err) => reject(err);
             image.src = url;
