@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import ImageGrid from "./ImageGrid";
 
 const ImageGridComponent = ({
@@ -47,6 +47,7 @@ const ImageGridComponent = ({
             image: isHovered ? images[imageIndex] : imagesGrayscale[imageIndex],
             onMouseEnter: () => handleMouseEnter(x, y),
             onMouseLeave: () => handleMouseLeave(x, y),
+            onClick: () => handleClick(x, y),
           });
         }
       }
@@ -69,6 +70,7 @@ const ImageGridComponent = ({
     imagesGrayscale,
     handleMouseEnter,
     handleMouseLeave,
+    handleClick,
     randomImageIndexGrid,
     isUnderLargeImage,
     GRID_SIZE,
@@ -81,8 +83,8 @@ const ImageGridComponent = ({
     LARGE_HEIGHT,
   ]);
 
-  return gridComponents.map(
-    ({ x, y, width, height, image, onMouseEnter, onMouseLeave, isHovered }) => {
+  const renderImageGrid = useCallback(
+    ({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => {
       if (hiddenImage && hiddenImage.x === x && hiddenImage.y === y) {
         return null;
       }
@@ -97,12 +99,14 @@ const ImageGridComponent = ({
           image={image}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          onClick={() => handleClick(x, y)}
-          isHovered={isHovered}
+          onClick={onClick}
         />
       );
-    }
+    },
+    [hiddenImage]
   );
+
+  return gridComponents.map(renderImageGrid);
 };
 
 export default React.memo(ImageGridComponent);

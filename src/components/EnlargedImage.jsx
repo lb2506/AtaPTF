@@ -11,35 +11,35 @@ const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClick
   const initX = x - centerX;
   const initY = y - centerY;
 
-  return (
-    <div
-        style={{
-          position: "fixed",
-          top: centerY,
-          left: centerX,
-          width: width,
-          height: height,
-          zIndex: 999,
-          animationName: isReturning ? `move-to-origin-${width && height === 250 ? "small" : "big"}` : `move-to-center-${width && height === 250 ? "small" : "big"}`,
-          animationDuration: "0.5s",
-          animationFillMode: "forwards",
-          animationTimingFunction: "ease-in-out",
-          '--init-x': `${initX}px`,
-          '--init-y': `${initY}px`,
-        }}
-      >
+  const imageSize = width && height === 250 ? "small" : "big";
+  const animationName = isReturning ? `move-to-origin-${imageSize}` : `move-to-center-${imageSize}`;
 
-        <img
-          src={src}
-          alt="Enlarged"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
+  const containerStyle = {
+    position: "fixed",
+    top: centerY,
+    left: centerX,
+    width: width,
+    height: height,
+    zIndex: 999,
+    animationName: animationName,
+    animationDuration: "0.5s",
+    animationFillMode: "forwards",
+    animationTimingFunction: "ease-in-out",
+    '--init-x': `${initX}px`,
+    '--init-y': `${initY}px`,
+  };
+
+  const imgStyle = {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    pointerEvents: "none",
+  };
+
+  return (
+    <div style={containerStyle}>
+      <img src={src} alt="Enlarged" style={imgStyle} />
+    </div>
   );
 };
 

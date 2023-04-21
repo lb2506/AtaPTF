@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ProjectDetails.css';
 
 const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnlargedImage }) => {
   const [centerImage, setCenterImage] = useState(true);
   const [animationFinished, setAnimationFinished] = useState(null);
-  const [animationFinishedFirstTime, setAnimationFinishedFirstTime] = useState(null)
+  const [animationFinishedFirstTime, setAnimationFinishedFirstTime] = useState(null);
 
   useEffect(() => {
+    let timer, animationTimer;
+
     if (showDetails) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setCenterImage(false);
       }, 500);
 
-      const animationTimer = setTimeout(() => {
+      animationTimer = setTimeout(() => {
         setAnimationFinished(true);
         setAnimationFinishedFirstTime(true);
       }, 1000);
-
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(animationTimer);
-      };
     }
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(animationTimer);
+    };
   }, [showDetails]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     setAnimationFinished(false);
     const timer = setTimeout(() => {
       setCenterImage(true);
@@ -35,22 +37,22 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
     }, 1000);
 
     const closeDetails = setTimeout(() => {
-      handleClickOnEnlargedImage()
+      handleClickOnEnlargedImage();
       setAnimationFinishedFirstTime(null);
-    }, 1500)
+    }, 1500);
 
     return () => {
       clearTimeout(timer);
       clearTimeout(closeDelay);
-      clearTimeout(closeDetails)
+      clearTimeout(closeDetails);
     };
-  };
+  }, [onDetailsClose, handleClickOnEnlargedImage]);
 
   if (!showDetails || !project) return null;
 
   const cssVars = {
     '--color1': project.color1,
-    '--color2': project.color2
+    '--color2': project.color2,
   };
 
   return (
@@ -95,7 +97,6 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
                   <span>DESCRIPTION</span>
                   <span>{project.description}</span>
                 </li>
-
               </ul>
             </div>
           </div>
