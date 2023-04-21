@@ -23,12 +23,13 @@ const GRID_SIZE = 100;
 const bigProjects = [0, 6, 11];
 const bigProjetsFerequency = 3;
 
-const imageURLs = projects.map((project) => project.imageURL);
+const imagesColor = projects.map((project) => project.imageColor);
+const imagesGray = projects.map((project) => project.imageGray);
 
 const generateDeterministicImageIndexGrid = (size) => {
   const rowCoefficient = 6;
   const colCoefficient = 7;
-  const modCoefficient = imageURLs.length;
+  const modCoefficient = imagesColor.length;
 
   const grid = Array(size)
     .fill(null)
@@ -49,7 +50,7 @@ const Home = () => {
   const [showBlackBackground, setShowBlackBackground] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [hiddenImage, setHiddenImage] = useState(null);
-  const { images, imagesGrayscale } = useLoadedImages(imageURLs);
+  const { images, imagesGrayscale } = useLoadedImages(imagesColor, imagesGray);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 

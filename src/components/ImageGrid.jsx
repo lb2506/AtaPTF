@@ -21,6 +21,7 @@ const ImageGrid = React.memo(({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      cornerRadius={5}
     />
   );
 });

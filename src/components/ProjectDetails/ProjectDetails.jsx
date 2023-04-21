@@ -59,7 +59,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
       className="project-details">
       <div className="details-container-top">
         <img
-          src={project.imageURL}
+          src={project.imageColor}
           alt='project'
           onClick={handleClick}
           className={`project-image ${animationFinished ? 'static' : ''} ${centerImage ? 'center' : 'left'}`}

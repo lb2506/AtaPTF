@@ -82,7 +82,7 @@ const ImageGridComponent = ({
   ]);
 
   return gridComponents.map(
-    ({ x, y, width, height, image, onMouseEnter, onMouseLeave }) => {
+    ({ x, y, width, height, image, onMouseEnter, onMouseLeave, isHovered }) => {
       if (hiddenImage && hiddenImage.x === x && hiddenImage.y === y) {
         return null;
       }
@@ -98,6 +98,7 @@ const ImageGridComponent = ({
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onClick={() => handleClick(x, y)}
+          isHovered={isHovered}
         />
       );
     }
