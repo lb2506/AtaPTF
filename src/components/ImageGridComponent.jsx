@@ -48,6 +48,7 @@ const ImageGridComponent = ({
             onMouseEnter: () => handleMouseEnter(x, y),
             onMouseLeave: () => handleMouseLeave(x, y),
             onClick: () => handleClick(x, y),
+            onTap: () => handleClick(x, y)
           });
         }
       }
@@ -84,7 +85,7 @@ const ImageGridComponent = ({
   ]);
 
   const renderImageGrid = useCallback(
-    ({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick }) => {
+    ({ x, y, width, height, image, onMouseEnter, onMouseLeave, onClick, onTap }) => {
       if (hiddenImage && hiddenImage.x === x && hiddenImage.y === y) {
         return null;
       }
@@ -100,6 +101,7 @@ const ImageGridComponent = ({
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onClick={onClick}
+          onTap={onTap}
         />
       );
     },

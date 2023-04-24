@@ -12,6 +12,9 @@ import { useLoadedImages } from '../hooks/useLoadedImages';
 import ProjectDetails from './ProjectDetails/ProjectDetails';
 import projects from '../projects.json';
 import CornerTexts from "./CornerTexts/CornerTexts";
+import Category from "./Category/Category";
+
+
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -43,7 +46,7 @@ const generateDeterministicImageIndexGrid = (size) => {
 
 const Home = () => {
   const [stagePos, setStagePos] = useState({ x: -50, y: 0 });
-  const [randomImageIndexGrid] = useState(generateDeterministicImageIndexGrid(GRID_SIZE));
+  const randomImageIndexGrid = useMemo(() => generateDeterministicImageIndexGrid(GRID_SIZE), []);
   const [hoveredImageIndices, setHoveredImageIndices] = useState({});
   const [enlargedImgData, setEnlargedImgData] = useState(null);
   const [isReturning, setIsReturning] = useState(false);
@@ -53,6 +56,7 @@ const Home = () => {
   const { images, imagesGrayscale } = useLoadedImages(imagesColor, imagesGray);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [showCategory, setShowCategory] = useState(false)
 
   useEffect(() => {
     if (isFadingOut) {
@@ -64,6 +68,7 @@ const Home = () => {
       return () => clearTimeout(timer);
     }
   }, [isFadingOut]);
+  
 
   const isUnderLargeImage = useCallback((x, y, gridSize, bigProjetsFerequency) => {
     const checkPosition = (x, y) => {
@@ -135,9 +140,11 @@ const Home = () => {
   };
 
 
-  const shouldEnlargeFirstImage = (x, y, imageIndex) => {
-    return bigProjects.includes(imageIndex) && (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0;
-  };
+  const shouldEnlargeFirstImage = useCallback((x, y, imageIndex) => {
+    return (
+      bigProjects.includes(imageIndex) &&
+      (Math.abs(x / (WIDTH + MARGIN)) + Math.abs(y / (HEIGHT + MARGIN))) % bigProjetsFerequency === 0);
+  }, []);
 
   const handleClick = useCallback((x, y) => {
     const indexX = Math.abs(x / (WIDTH + MARGIN)) % GRID_SIZE;
@@ -162,7 +169,7 @@ const Home = () => {
     setTimeout(() => {
       setShowProjectDetails(true);
     }, 500)
-  }, [randomImageIndexGrid, images, stagePos]);
+  }, [randomImageIndexGrid, images, stagePos, shouldEnlargeFirstImage]);
 
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
@@ -181,7 +188,10 @@ const Home = () => {
     <>
       <CornerTexts
         project={selectedProject}
+        onCategoryClick={() => setShowCategory(!showCategory)}
+        isCategoryShow={showCategory}
       />
+      {showCategory && <Category />}
       <Stage
         className="container"
         x={stagePos.x}

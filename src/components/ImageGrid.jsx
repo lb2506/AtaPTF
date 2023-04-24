@@ -10,6 +10,7 @@ const ImageGrid = React.memo(({
   onMouseEnter,
   onMouseLeave,
   onClick,
+  onTap,
 }) => {
   return (
     <KonvaImage
@@ -21,6 +22,7 @@ const ImageGrid = React.memo(({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      onTap={onTap}
       cornerRadius={5}
     />
   );

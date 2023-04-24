@@ -29,19 +29,31 @@
   top: 0;
   right: 0;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
   text-align: end;
   gap: 5px;
-  font-size: 20px;
   z-index: 9999;
-  color: var(--color2);
-  cursor: pointer;
 }
 
-.top-right-menu li {
-  cursor: pointer;
+.top-right-menu ul{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
+
+.top-right-menu button {
+  cursor: pointer;
+  background: none;
+  color: var(--color2);
+  border: none;
+  font-size: 20px;
+}
+
+.top-right-menu button:disabled {
+ color: (--color2);
+ opacity: 0.4;
+ cursor: default;
+}
+
 
 .bottom-right-links {
   position: fixed;

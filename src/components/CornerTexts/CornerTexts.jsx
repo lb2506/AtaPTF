@@ -2,7 +2,7 @@ import React from 'react';
 import './CornerTexts.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const CornerTexts = ({ project }) => {
+const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -14,6 +14,18 @@ const CornerTexts = ({ project }) => {
     const isHome = location.pathname === "/";
     const isContact = location.pathname === "/contact";
 
+    const handleCanvasClick = React.useCallback(() => {
+        if (isCategoryShow) {
+            onCategoryClick();
+        } else {
+            navigate("/");
+        }
+    }, [isCategoryShow, onCategoryClick, navigate]);
+
+    const handleContactClick = React.useCallback(() => {
+        navigate("/contact");
+    }, [navigate]);
+
     return (
         <div
             style={{ ...cssVars }}>
@@ -23,10 +35,16 @@ const CornerTexts = ({ project }) => {
                 <span>DIRECTOR</span>
             </div>
             <nav className="top-right-menu">
-            <ul>
-                    <li onClick={() => navigate("/")} className={isHome ? 'bold' : ''}>CANVAS</li>
-                    <li>CATEGORY</li>
-                    <li onClick={() => navigate("/contact")} className={isContact ? 'bold' : ''}>CONTACT</li>
+                <ul>
+                    <li onClick={handleCanvasClick} onTap={handleCanvasClick}>
+                        <button className={!isCategoryShow && isHome ? 'bold' : ''}>CANVAS</button>
+                    </li>
+                    <li>
+                    <button className={isCategoryShow ? 'bold' : ''} disabled={location.pathname === "/contact" || project} onClick={onCategoryClick} onTap={onCategoryClick}>CATEGORY</button>
+                    </li>
+                    <li onClick={handleContactClick} onTap={handleContactClick}>
+                        <button className={isContact ? 'bold' : ''}>CONTACT</button>
+                    </li>
                 </ul>
             </nav>
             <div className="bottom-right-links">

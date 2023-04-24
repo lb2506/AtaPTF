@@ -1,27 +1,28 @@
-import { useState, useEffect } from 'react';
-
-const loadImage = async (url) => {
-    return new Promise((resolve, reject) => {
-        const image = new window.Image();
-        image.crossOrigin = "anonymous";
-        image.onload = () => resolve(image);
-        image.onerror = (err) => reject(err);
-        image.src = url;
-    });
-};
-
-const loadImages = async (urls) => {
-    const promises = urls.map((url) => loadImage(url));
-    const results = await Promise.allSettled(promises);
-
-    return results
-        .filter((result) => result.status === 'fulfilled')
-        .map((result) => result.value);
-};
+import { useState, useEffect, useCallback } from 'react';
 
 export const useLoadedImages = (imagesColor, imagesGray) => {
     const [images, setImages] = useState([]);
     const [imagesGrayscale, setImagesGrayscale] = useState([]);
+
+    // Déplacer useCallback à l'intérieur du hook personnalisé useLoadedImages
+    const loadImage = useCallback(async (url) => {
+        return new Promise((resolve, reject) => {
+            const image = new window.Image();
+            image.crossOrigin = "anonymous";
+            image.onload = () => resolve(image);
+            image.onerror = (err) => reject(err);
+            image.src = url;
+        });
+    }, []);
+
+    const loadImages = useCallback(async (urls) => {
+        const promises = urls.map((url) => loadImage(url));
+        const results = await Promise.allSettled(promises);
+
+        return results
+            .filter((result) => result.status === 'fulfilled')
+            .map((result) => result.value);
+    }, [loadImage]);
 
     useEffect(() => {
         (async () => {
@@ -31,7 +32,7 @@ export const useLoadedImages = (imagesColor, imagesGray) => {
             const loadedImagesGray = await loadImages(imagesGray);
             setImagesGrayscale(loadedImagesGray);
         })();
-    }, [imagesColor, imagesGray]);
+    }, [imagesColor, imagesGray, loadImages]);
 
     return { images, imagesGrayscale };
 };
