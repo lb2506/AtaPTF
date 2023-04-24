@@ -5,13 +5,19 @@
   right: 0;
   bottom: 0;
   display: flex;
- 
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.85);
   z-index: 100;
   overflow-y: auto;
   padding-top: 15vh;
+  -ms-overflow-style: none;
+  scrollbar-width: 0;
 }
+
+.category-container::-webkit-scrollbar {
+  display: none;
+}
+
 
 .category-data {
   color: #ffffff;
