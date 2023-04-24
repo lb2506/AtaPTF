@@ -36,13 +36,13 @@ const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
             </div>
             <nav className="top-right-menu">
                 <ul>
-                    <li onClick={handleCanvasClick} onTap={handleCanvasClick}>
+                    <li onClick={handleCanvasClick}>
                         <button className={!isCategoryShow && isHome ? 'bold' : ''}>CANVAS</button>
                     </li>
                     <li>
-                    <button className={isCategoryShow ? 'bold' : ''} disabled={location.pathname === "/contact" || project} onClick={onCategoryClick} onTap={onCategoryClick}>CATEGORY</button>
+                    <button className={isCategoryShow ? 'bold' : ''} disabled={location.pathname === "/contact" || project} onClick={onCategoryClick}>CATEGORY</button>
                     </li>
-                    <li onClick={handleContactClick} onTap={handleContactClick}>
+                    <li onClick={handleContactClick}>
                         <button className={isContact ? 'bold' : ''}>CONTACT</button>
                     </li>
                 </ul>

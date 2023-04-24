@@ -14,7 +14,6 @@ const BlackBackground = ({
   return (
     <div
       onClick={handleClickOnEnlargedImage}
-      onTap={handleClickOnEnlargedImage}
       className={animationClass}
       style={{
         position: "fixed",
