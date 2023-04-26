@@ -40,7 +40,16 @@ const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
                         <button className={!isCategoryShow && isHome ? 'bold' : ''}>CANVAS</button>
                     </li>
                     <li>
-                    <button className={isCategoryShow ? 'bold' : ''} disabled={location.pathname === "/contact" || project} onClick={onCategoryClick}>CATEGORY</button>
+                        <button
+                            className={isCategoryShow ? 'bold' : ''}
+                            disabled={location.pathname === "/contact" || project}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onCategoryClick();
+                            }}
+                        >
+                            CATEGORY
+                        </button>
                     </li>
                     <li onClick={handleContactClick}>
                         <button className={isContact ? 'bold' : ''}>CONTACT</button>

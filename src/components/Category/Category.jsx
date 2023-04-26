@@ -1,15 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Category.css';
 import projects from '../../projects.json';
 
-const Category = () => {
+const Category = ({ onCategoryClick, isVisible }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const categoryDataRef = useRef(null);
 
     useEffect(() => {
         const uniqueCategories = [...new Set(projects.map((project) => project.category))];
         setCategories(uniqueCategories);
     }, []);
+
+    useEffect(() => {
+        if (isVisible) {
+          const handleClickOutside = (event) => {
+            if (categoryDataRef.current && !categoryDataRef.current.contains(event.target)) {
+              onCategoryClick();
+            }
+          };
+      
+          document.addEventListener('click', handleClickOutside);
+          return () => {
+            document.removeEventListener('click', handleClickOutside);
+          };
+        }
+      }, [onCategoryClick, isVisible]);
+      
+
 
     const handleCategoryClick = (category) => {
         if (selectedCategories.includes(category)) {
@@ -35,7 +53,7 @@ const Category = () => {
     return (
         <>
             <div className="category-container">
-                <div className="category-data">
+                <div className="category-data" ref={categoryDataRef}>
                     <div className='category-data-title'>ALL PROJECTS</div>
                     <div className='category-data-names'>
                         {categories && categories.map((catName, index) => (

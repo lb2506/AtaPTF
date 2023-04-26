@@ -68,7 +68,7 @@ const Home = () => {
       return () => clearTimeout(timer);
     }
   }, [isFadingOut]);
-  
+
 
   const isUnderLargeImage = useCallback((x, y, gridSize, bigProjetsFerequency) => {
     const checkPosition = (x, y) => {
@@ -171,6 +171,7 @@ const Home = () => {
     }, 500)
   }, [randomImageIndexGrid, images, stagePos, shouldEnlargeFirstImage]);
 
+
   const EnlargedImageComponent = useMemo(() => {
     if (!enlargedImgData) return null;
 
@@ -191,7 +192,9 @@ const Home = () => {
         onCategoryClick={() => setShowCategory(!showCategory)}
         isCategoryShow={showCategory}
       />
-      {showCategory && <Category />}
+      {showCategory && (
+        <Category onCategoryClick={() => setShowCategory(!showCategory)} isVisible={showCategory} />
+      )}
       <Stage
         className="container"
         x={stagePos.x}
