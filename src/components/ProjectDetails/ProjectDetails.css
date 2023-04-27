@@ -141,7 +141,7 @@
   .details-container-top {
     flex-direction: column;
     min-width: 100%;
-    margin-top: calc(50vh - 165px);
+    margin-top: calc((var(--innerHeight)/2) - 125px);
   }
   
   .project-image {

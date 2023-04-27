@@ -29,7 +29,7 @@ const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
     return (
         <div
             style={{ ...cssVars }}>
-            <div className="top-left-text">OWNER</div>
+            <div className="top-left-text">COMPANY</div>
             <div className="bottom-left-text">
                 <span>JOB</span>
                 <span>NAME</span>

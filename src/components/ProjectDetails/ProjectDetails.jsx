@@ -4,8 +4,9 @@ import './ProjectDetails.css';
 const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnlargedImage }) => {
   const [centerImage, setCenterImage] = useState(true);
   const [animationFinished, setAnimationFinished] = useState(null);
-  const [animationFinishedFirstTime, setAnimationFinishedFirstTime] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [closing, setClosing] = useState(false);
+
 
   const checkIsMobile = () => {
     if (window.innerWidth <= 768) {
@@ -26,27 +27,30 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
 
   useEffect(() => {
-
     let timer, animationTimer;
-
+  
     if (showDetails) {
-      timer = setTimeout(() => {
+      if (!isMobile) {
+        timer = setTimeout(() => {
+          setCenterImage(false);
+        }, 500);
+      } else {
         setCenterImage(false);
-      }, 500);
-
+      }
+  
       animationTimer = setTimeout(() => {
         setAnimationFinished(true);
-        setAnimationFinishedFirstTime(true);
-      }, 1000);
+      }, isMobile ? 0 : 1000);
     }
-
+  
     return () => {
       clearTimeout(timer);
       clearTimeout(animationTimer);
     };
-  }, [showDetails]);
-
+  }, [showDetails, isMobile]);
+  
   const handleClick = useCallback(() => {
+    setClosing(true);
     setAnimationFinished(false);
 
     if (isMobile) {
@@ -55,11 +59,12 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
       const closeDetails = setTimeout(() => {
         handleClickOnEnlargedImage();
-        setAnimationFinishedFirstTime(null);
+        setClosing(false);
       }, 500);
 
       return () => {
         clearTimeout(closeDetails);
+
       };
 
     } else {
@@ -74,13 +79,14 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
 
       const closeDetails = setTimeout(() => {
         handleClickOnEnlargedImage();
-        setAnimationFinishedFirstTime(null);
+        setClosing(false);
       }, 1500);
 
       return () => {
         clearTimeout(timer);
         clearTimeout(closeDelay);
         clearTimeout(closeDetails);
+
       };
     }
   }, [onDetailsClose, handleClickOnEnlargedImage, isMobile]);
@@ -90,6 +96,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
   const cssVars = {
     '--color1': project.color1,
     '--color2': project.color2,
+    '--innerHeight': `${window.innerHeight}px`,
   };
 
   return (
@@ -101,7 +108,6 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           src={project.imageColor}
           alt='project'
           onClick={handleClick}
-
           className={`project-image ${animationFinished ? 'static' : ''} ${centerImage ? 'center' : 'left'}`}
         />
         <div
@@ -141,7 +147,10 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           </div>
         </div>
       </div>
-      <div className={`details-container-bottom ${isMobile ? 'fadeInDesc' : animationFinished && animationFinishedFirstTime ? 'fadeInDesc' : 'fadeOutDesc'}`}>
+      <div
+        className={`details-container-bottom ${animationFinished ? "fadeInDesc" : closing ? "fadeOutDesc" : ""
+          }`}
+      >
         {project.mainImageBottom &&
           <img
             className='project-image-main'
