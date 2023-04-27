@@ -133,10 +133,15 @@
 }
 
 @media only screen and (max-width: 768px) {
+
+  .project-details{
+    display: block;
+  }
+
   .details-container-top {
     flex-direction: column;
     min-width: 100%;
-    margin-top: calc(50vh + 174px);
+    margin-top: calc(50vh - 165px);
   }
   
   .project-image {
@@ -175,20 +180,24 @@
   }
   
   .project-text-content li {
-    flex-direction: column;
     align-items: flex-start;
-    padding: 10px 0;
+    padding: 15px 0;
+    gap: 10px;
+  }
+
+  .project-text-content li:last-child{
+    flex-direction: column;
   }
   
   .project-text-content li span {
     max-width: 100%;
     text-align: start;
-    margin-bottom: 10px;
+  
   }
   
   .details-container-bottom {
-    width: 80%;
-    margin-top: calc(70vh + 510px);
+    position: static;
+    margin: 50px auto 0 auto;
   }
   
   .details-container-bottom-pictures {

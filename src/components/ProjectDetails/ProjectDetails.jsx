@@ -141,7 +141,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
           </div>
         </div>
       </div>
-      <div style={{ display: animationFinished ? 'block' : animationFinishedFirstTime ? 'block' : 'none' }} className={`details-container-bottom ${animationFinished && animationFinishedFirstTime ? 'fadeInDesc' : 'fadeOutDesc'}`}>
+      <div className={`details-container-bottom ${isMobile ? 'fadeInDesc' : animationFinished && animationFinishedFirstTime ? 'fadeInDesc' : 'fadeOutDesc'}`}>
         {project.mainImageBottom &&
           <img
             className='project-image-main'
