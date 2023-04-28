@@ -1,3 +1,7 @@
+.container-enlarged{
+  will-change: transform;
+}
+
 @keyframes move-to-center-small-mobile {
   from {
     transform: translate(var(--init-x), var(--init-y));

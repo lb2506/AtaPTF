@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 
-const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClickOnEnlargedImage, isReturning }) => {
+const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, isReturning }) => {
   const [isMobile, setIsMobile] = useState(null);
 
   const checkIsMobile = useCallback(() => {
@@ -57,7 +57,7 @@ const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClick
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="container-enlarged" style={containerStyle}>
       <img src={src} alt="Enlarged" style={imgStyle} />
     </div>
   );

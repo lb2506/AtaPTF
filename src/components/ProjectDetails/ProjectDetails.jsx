@@ -95,7 +95,7 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
         <img
           src={project.imageColor}
           alt='project'
-          className={`project-image ${animationFinished ? 'static' : ''} ${centerImage ? 'center' : 'left'}`}
+          className={`project-image ${centerImage && !isMobile ? 'center' : 'left'}`}
         />
         <div
           className="project-text"

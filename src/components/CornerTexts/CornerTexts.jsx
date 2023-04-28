@@ -24,10 +24,10 @@ const CornerTexts = ({ onCategoryClick, isCategoryShow }) => {
 
     return (
         <div>
-            <div className="top-left-text">COMPANY</div>
+            <div className="top-left-text">Léo B.</div>
             <div className="bottom-left-text">
-                <span>JOB</span>
-                <span>NAME</span>
+                <span>WEB</span>
+                <span>DEVELOPER</span>
             </div>
             <nav className="top-right-menu">
                 <ul>
