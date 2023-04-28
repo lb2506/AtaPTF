@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './ProjectDetails.css';
 
 const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnlargedImage }) => {
@@ -7,14 +7,13 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
   const [isMobile, setIsMobile] = useState(false);
   const [closing, setClosing] = useState(false);
 
-
-  const checkIsMobile = () => {
-    if (window.innerWidth <= 768) {
+  const checkIsMobile = useCallback(() => {
+    if (window.innerWidth <= 1024) {
       setIsMobile(true);
     } else {
       setIsMobile(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkIsMobile();
@@ -23,101 +22,86 @@ const ProjectDetails = ({ showDetails, project, onDetailsClose, handleClickOnEnl
     return () => {
       window.removeEventListener('resize', checkIsMobile);
     };
-  }, []);
+  }, [checkIsMobile]);
 
 
   useEffect(() => {
-    let timer, animationTimer;
-  
+    let timer = null;
+    let animationTimer = null;
+
     if (showDetails) {
-      if (!isMobile) {
-        timer = setTimeout(() => {
-          setCenterImage(false);
-        }, 500);
-      } else {
+      timer = setTimeout(() => {
         setCenterImage(false);
-      }
-  
+      }, 500);
+
       animationTimer = setTimeout(() => {
         setAnimationFinished(true);
-      }, isMobile ? 0 : 1000);
+      }, 1000);
     }
-  
+
     return () => {
       clearTimeout(timer);
       clearTimeout(animationTimer);
     };
-  }, [showDetails, isMobile]);
-  
+  }, [showDetails]);
+
+
   const handleClick = useCallback(() => {
     setClosing(true);
     setAnimationFinished(false);
 
-    if (isMobile) {
-      setCenterImage(true)
+    const timer = setTimeout(() => {
+      setCenterImage(true);
+    }, 500);
+
+    const closeDelay = setTimeout(() => {
       onDetailsClose();
+    }, 1000);
 
-      const closeDetails = setTimeout(() => {
-        handleClickOnEnlargedImage();
-        setClosing(false);
-      }, 500);
+    const closeDetails = setTimeout(() => {
+      handleClickOnEnlargedImage();
+      setClosing(false);
+    }, 1500);
 
-      return () => {
-        clearTimeout(closeDetails);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(closeDelay);
+      clearTimeout(closeDetails);
 
-      };
+    };
+  }, [onDetailsClose, handleClickOnEnlargedImage]);
 
-    } else {
-
-      const timer = setTimeout(() => {
-        setCenterImage(true);
-      }, 500);
-
-      const closeDelay = setTimeout(() => {
-        onDetailsClose();
-      }, 1000);
-
-      const closeDetails = setTimeout(() => {
-        handleClickOnEnlargedImage();
-        setClosing(false);
-      }, 1500);
-
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(closeDelay);
-        clearTimeout(closeDetails);
-
-      };
-    }
-  }, [onDetailsClose, handleClickOnEnlargedImage, isMobile]);
+  const cssVars = useMemo(() => {
+    if (!showDetails || !project) return null;
+    return {
+      '--color1': project.color1,
+      '--color2': project.color2,
+      '--innerHeight': `${window.innerHeight}px`,
+    };
+  }, [showDetails, project]);
 
   if (!showDetails || !project) return null;
-
-  const cssVars = {
-    '--color1': project.color1,
-    '--color2': project.color2,
-    '--innerHeight': `${window.innerHeight}px`,
-  };
 
   return (
     <div
       style={{ ...cssVars }}
       className="project-details">
-      <div className="details-container-top">
+      <div
+        className="close-button"
+        style={{ display: animationFinished ? "block" : "none" }}
+        onClick={handleClick}
+      />
+      <div className={`details-container-top ${isMobile && !centerImage ? "move-to-top" : "move-to-bottom"}`}>
         <img
           src={project.imageColor}
           alt='project'
-          onClick={handleClick}
           className={`project-image ${animationFinished ? 'static' : ''} ${centerImage ? 'center' : 'left'}`}
         />
         <div
           className="project-text"
-          style={{
-            display: animationFinished || isMobile ? 'block' : 'none',
-          }}
+          style={!isMobile ? { display: animationFinished ? 'block' : 'none' } : null}
         >
-
-          <div className={`project-text-content ${animationFinished || isMobile ? 'fadeIn' : ''}`}>
+          <div className={`project-text-content ${animationFinished ? 'fadeIn' : closing ? "fadeOut" : ""}`}>
             <h1 className="title">{project.title}</h1>
             <div>
               <h1 className="specifications">Specifications</h1>

@@ -3,10 +3,10 @@
   top: 0;
   left: 0;
   padding: 10px;
-  font-size: 20px;
-  z-index: 9999;
+  font-size: 25px;
+  z-index: 998;
   font-weight: bold;
-  color: var(--color2);
+  color: #FFFFFF;
   cursor: pointer;
 }
 
@@ -18,9 +18,9 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-size: 20px;
-  z-index: 9999;
-  color: var(--color2);
+  font-size: 25px;
+  z-index: 998;
+  color: #FFFFFF;
   cursor: pointer;
 }
 
@@ -31,10 +31,10 @@
   padding: 10px;
   text-align: end;
   gap: 5px;
-  z-index: 9999;
+  z-index: 998;
 }
 
-.top-right-menu ul{
+.top-right-menu ul {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -43,17 +43,16 @@
 .top-right-menu button {
   cursor: pointer;
   background: none;
-  color: var(--color2);
+  color: #FFFFFF;
   border: none;
-  font-size: 20px;
+  font-size: 25px;
 }
 
 .top-right-menu button:disabled {
- color: (--color2);
- opacity: 0.4;
- cursor: default;
+  color: #FFFFFF;
+  opacity: 0.4;
+  cursor: default;
 }
-
 
 .bottom-right-links {
   position: fixed;
@@ -64,12 +63,23 @@
   flex-direction: column;
   text-align: end;
   gap: 5px;
-  font-size: 20px;
-  z-index: 9999;
-  color: var(--color2);
+  font-size: 25px;
+  z-index: 998;
+  color: #FFFFFF;
   cursor: pointer;
 }
 
 .bold {
   font-weight: bold;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .top-left-text,
+  .top-right-menu button,
+  .bottom-left-text,
+  .bottom-right-links {
+    font-size: 20px;
+  }
+
 }

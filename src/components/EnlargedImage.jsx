@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClickOnEnlargedImage, isReturning }) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(null);
 
-  const checkIsMobile = () => {
+  const checkIsMobile = useCallback(() => {
     if (window.innerWidth <= 768) {
       setIsMobile(true);
     } else {
       setIsMobile(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkIsMobile();
@@ -18,7 +18,7 @@ const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClick
     return () => {
       window.removeEventListener('resize', checkIsMobile);
     };
-  }, []);
+  }, [checkIsMobile]);
   
   if (!enlargedImgData) return null;
 
@@ -35,6 +35,7 @@ const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, handleClick
 
   const containerStyle = {
     position: "fixed",
+    willChange: 'transform',
     top: centerY,
     left: centerX,
     width: width,

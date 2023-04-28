@@ -15,7 +15,6 @@
 
 .details-container-top {
   width: 80%;
-  min-width: 1000px;
   display: flex;
   align-items: center;
   position: relative;
@@ -28,7 +27,6 @@
   top: 50%;
   transform: translateY(-50%);
   transition: left 0.5s ease;
-  cursor: pointer;
 }
 
 .project-image.center {
@@ -72,16 +70,17 @@
 }
 
 .project-text-content li span {
-  max-width: 50%;
   text-align: end;
 }
 
-.fadeIn {
-  opacity: 1;
+.project-text-content li:last-child {
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 0;
 }
 
-.fadeOut {
-  opacity: 0;
+.project-text-content li:last-child span {
+  text-align: start;
 }
 
 .title {
@@ -132,31 +131,71 @@
   object-fit: cover;
 }
 
-@media only screen and (max-width: 768px) {
+.project-image-bottom {
+  width: calc(50% - 10px);
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
 
-  .project-details{
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+.close-button:before,
+.close-button:after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  content: ' ';
+  height: 30px;
+  width: 2px;
+  background-color: var(--color2);
+}
+
+.close-button:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-button:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+@media only screen and (max-width: 1024px) {
+
+  .project-details {
     display: block;
   }
 
   .details-container-top {
     flex-direction: column;
     min-width: 100%;
-    margin-top: calc((var(--innerHeight)/2) - 125px);
+    margin-top: calc((var(--innerHeight)/2) - 257px);
   }
-  
+
   .project-image {
-    width: 250px;
+    width: 514px;
     height: auto;
     position: static;
     top: auto;
     transform: none;
   }
-  
+
   .project-image.center,
   .project-image.left {
     left: auto;
   }
-  
+
   .project-text {
     width: 80%;
     height: auto;
@@ -164,68 +203,156 @@
     display: block;
     margin-top: 40px;
   }
-  
+
   .project-text-content {
     height: auto;
   }
-  
+
   .title {
     font-size: 30px;
     margin-bottom: 20px;
   }
-  
+
   .specifications {
     font-size: 20px;
     margin-bottom: 20px;
   }
-  
+
   .project-text-content li {
     align-items: flex-start;
     padding: 15px 0;
     gap: 10px;
   }
 
-  .project-text-content li:last-child{
-    flex-direction: column;
-  }
-  
   .project-text-content li span {
     max-width: 100%;
     text-align: start;
-  
+
   }
-  
+
   .details-container-bottom {
     position: static;
     margin: 50px auto 0 auto;
   }
-  
+
   .details-container-bottom-pictures {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .project-image-main {
     width: 100%;
     height: auto;
   }
-  
+
   .project-image-bottom {
     width: 100% !important;
     margin-bottom: 20px;
   }
-  
+
   .details-container-bottom-desc-one,
   .details-container-bottom-desc-two {
     margin: 20px auto;
     width: 100%;
   }
-  
+
 }
 
-.project-image-bottom {
-  width: calc(50% - 10px);
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  margin-bottom: 20px;
+@media only screen and (max-width: 768px) {
+
+  .project-details {
+    display: block;
+  }
+
+  .details-container-top {
+    flex-direction: column;
+    min-width: 100%;
+    transition: all 0.5s;
+  }
+
+  .move-to-top {
+    margin-top: calc((var(--innerHeight)/3.5) - 125px);
+  }
+
+  .move-to-bottom {
+    margin-top: calc((var(--innerHeight)/2) - 125px);
+  }
+
+  .project-image {
+    width: 250px;
+    height: auto;
+    position: static;
+    top: auto;
+    transform: none;
+  }
+
+  .project-image.center,
+  .project-image.left {
+    left: auto;
+  }
+
+  .project-text {
+    width: 80%;
+    height: auto;
+    margin-left: 0;
+    display: block;
+    margin-top: 40px;
+  }
+
+  .project-text-content {
+    height: auto;
+  }
+
+  .title {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+
+  .specifications {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .project-text-content li {
+    align-items: flex-start;
+    padding: 15px 0;
+    gap: 10px;
+  }
+
+  .project-text-content li:last-child {
+    flex-direction: column;
+  }
+
+  .project-text-content li span {
+    max-width: 100%;
+    text-align: start;
+
+  }
+
+  .details-container-bottom {
+    position: static;
+    margin: 50px auto 0 auto;
+  }
+
+  .details-container-bottom-pictures {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .project-image-main {
+    width: 100%;
+    height: auto;
+  }
+
+  .project-image-bottom {
+    width: 100% !important;
+    margin-bottom: 20px;
+  }
+
+  .details-container-bottom-desc-one,
+  .details-container-bottom-desc-two {
+    margin: 20px auto;
+    width: 100%;
+  }
+
 }

@@ -1,43 +1,42 @@
-
-  @keyframes move-to-center-small-mobile {
-    from {
-      transform: translate(var(--init-x), var(--init-y));
-    }
-  
-    to {
-      transform: translate(0, 0);
-    }
-  }
-  
-  @keyframes move-to-origin-small-mobile {
-    from {
-      transform: translate(0, 0);
-    }
-  
-    to {
-      transform: translate(var(--init-x), var(--init-y));
-    }
+@keyframes move-to-center-small-mobile {
+  from {
+    transform: translate(var(--init-x), var(--init-y));
   }
 
-  @keyframes move-to-center-big-mobile {
-    from {
-      transform: translate(var(--init-x), var(--init-y)) scale(1);
-    }
-  
-    to {
-      transform: translate(0, 0) scale(calc(250/514));
-    }
+  to {
+    transform: translate(0, 0);
   }
-  
-  @keyframes move-to-origin-big-mobile {
-    from {
-      transform: translate(0, 0) scale(calc(250/514));
-    }
-  
-    to {
-      transform: translate(var(--init-x), var(--init-y)) scale(1);
-    }
+}
+
+@keyframes move-to-origin-small-mobile {
+  from {
+    transform: translate(0, 0);
   }
+
+  to {
+    transform: translate(var(--init-x), var(--init-y));
+  }
+}
+
+@keyframes move-to-center-big-mobile {
+  from {
+    transform: translate(var(--init-x), var(--init-y)) scale(1);
+  }
+
+  to {
+    transform: translate(0, 0) scale(calc(250/514));
+  }
+}
+
+@keyframes move-to-origin-big-mobile {
+  from {
+    transform: translate(0, 0) scale(calc(250/514));
+  }
+
+  to {
+    transform: translate(var(--init-x), var(--init-y)) scale(1);
+  }
+}
 
 
 @keyframes move-to-center-big {

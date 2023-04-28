@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './CornerTexts.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
+const CornerTexts = ({ onCategoryClick, isCategoryShow }) => {
 
     const navigate = useNavigate();
     const location = useLocation();
 
-    const cssVars = {
-        '--color2': project ? project.color2 : "#FFFFFF"
-    };
-
     const isHome = location.pathname === "/";
     const isContact = location.pathname === "/contact";
 
-    const handleCanvasClick = React.useCallback(() => {
+    const handleCanvasClick = useCallback(() => {
         if (isCategoryShow) {
             onCategoryClick();
         } else {
@@ -27,8 +23,7 @@ const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
     }, [navigate]);
 
     return (
-        <div
-            style={{ ...cssVars }}>
+        <div>
             <div className="top-left-text">COMPANY</div>
             <div className="bottom-left-text">
                 <span>JOB</span>
@@ -42,7 +37,7 @@ const CornerTexts = ({ project, onCategoryClick, isCategoryShow }) => {
                     <li>
                         <button
                             className={isCategoryShow ? 'bold' : ''}
-                            disabled={location.pathname === "/contact" || project}
+                            disabled={location.pathname === "/contact"}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onCategoryClick();

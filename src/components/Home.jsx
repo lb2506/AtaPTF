@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Stage, Layer } from "react-konva";
-import "konva/lib/filters/Grayscale";
 import "../App.css";
 import "../animations.css";
 
@@ -13,8 +12,6 @@ import ProjectDetails from './ProjectDetails/ProjectDetails';
 import projects from '../projects.json';
 import CornerTexts from "./CornerTexts/CornerTexts";
 import Category from "./Category/Category";
-
-
 
 const WIDTH = 250;
 const HEIGHT = 250;
@@ -188,7 +185,6 @@ const Home = () => {
   return (
     <>
       <CornerTexts
-        project={selectedProject}
         onCategoryClick={() => setShowCategory(!showCategory)}
         isCategoryShow={showCategory}
       />
