@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { useWindowSize } from "../hooks/useWindowSize";
 
-const EnlargedImage = ({ enlargedImgData, windowWidth, windowHeight, isReturning }) => {
+const EnlargedImage = ({ enlargedImgData, isReturning }) => {
   const [isMobile, setIsMobile] = useState(null);
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
 
   const checkIsMobile = useCallback(() => {
     if (window.innerWidth <= 768) {

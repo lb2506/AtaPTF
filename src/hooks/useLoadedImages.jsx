@@ -4,7 +4,6 @@ export const useLoadedImages = (imagesColor, imagesGray) => {
     const [images, setImages] = useState([]);
     const [imagesGrayscale, setImagesGrayscale] = useState([]);
 
-    // Déplacer useCallback à l'intérieur du hook personnalisé useLoadedImages
     const loadImage = useCallback(async (url) => {
         return new Promise((resolve, reject) => {
             const image = new window.Image();

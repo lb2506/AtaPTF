@@ -108,7 +108,6 @@ const ImageGridComponent = ({
     [hiddenImage]
   );
 
-  return gridComponents.map(renderImageGrid);
-};
+  return useMemo(() => gridComponents.map(renderImageGrid), [gridComponents, renderImageGrid]);};
 
 export default React.memo(ImageGridComponent);
